@@ -22,6 +22,10 @@ export const getRawMaterials = (companyId) =>
 export const getFinance = (companyId) =>
   API.get(`/finance?companyId=${companyId}`);
 
+export const getFinanceTransactions = async (companyId) => {
+  return API.get(`/finance?companyId=${companyId}`);
+};
+
 export const getSales = (companyId) =>
   API.get(`/sales?companyId=${companyId}`);
 
@@ -40,5 +44,32 @@ export const uploadDataset = (file, department) => {
     },
   });
 };
+
+
+export const getProductionTrend = async (companyId) => {
+  return API.get(
+    `/dashboard/production-trend?companyId=${companyId}`
+  );
+};
+
+export const getFinanceTrend = async (companyId) => {
+  return API.get(
+    `/dashboard/finance-trend?companyId=${companyId}`
+  );
+};
+
+export const getInventoryOverview = async (companyId) => {
+  return API.get(
+    `/dashboard/inventory-overview?companyId=${companyId}`
+  );
+};
+
+export const getSalesRegions = async (companyId) => {
+  return API.get(
+    `/dashboard/sales-regions?companyId=${companyId}`
+  );
+};
+
+
 
 export default API;

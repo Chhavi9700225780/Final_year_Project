@@ -11,6 +11,7 @@ import salesRoutes from "./routes/salesRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import alertRoutes from "./routes/alertRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import dashboardAnalyticsRoutes from "./routes/dashboardAnalyticsRoutes.js";
 
 const app = express();
 
@@ -46,6 +47,11 @@ app.use("/api/alerts", alertRoutes);
 app.use(
   "/api/uploads",
   uploadRoutes
+);
+
+app.use(
+  "/api/dashboard",
+  dashboardAnalyticsRoutes
 );
 
 app.use((req, res) => {

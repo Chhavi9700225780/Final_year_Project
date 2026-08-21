@@ -7,6 +7,10 @@ import Dashboard from "./pages/Dashboard";
 import DataSources from "./pages/DataSources";
 import Production from "./pages/Production";
 import Inventory from "./pages/Inventory";
+import Finance from "./pages/Finance";
+import Sales from "./pages/Sales";
+import Alerts from "./pages/Alerts";
+import Reports from "./pages/Reports";
 
 import "./index.css";
 
@@ -35,44 +39,16 @@ const App = () => {
             
 
       case "Finance":
-        return (
-          <div className="coming-soon">
-            <h2>Finance</h2>
-            <p>
-              Finance module is under development.
-            </p>
-          </div>
-        );
+        return <Finance />;
 
       case "Sales":
-        return (
-          <div className="coming-soon">
-            <h2>Sales</h2>
-            <p>
-              Sales module is under development.
-            </p>
-          </div>
-        );
-
+        return <Sales/>;
+        
       case "Alerts":
-        return (
-          <div className="coming-soon">
-            <h2>Alerts</h2>
-            <p>
-              Alerts module is under development.
-            </p>
-          </div>
-        );
+        return <Alerts />;
 
       case "Reports":
-        return (
-          <div className="coming-soon">
-            <h2>Reports</h2>
-            <p>
-              Reports module is under development.
-            </p>
-          </div>
-        );
+        return <Reports />;
 
       default:
         return <Dashboard />;
@@ -81,7 +57,7 @@ const App = () => {
 
   return (
     <div className="app">
-
+      
       <Sidebar
         activePage={activePage}
         setActivePage={setActivePage}
@@ -94,7 +70,7 @@ const App = () => {
         <section className="page-content">
           {renderPage()}
         </section>
-
+          
       </main>
 
     </div>
