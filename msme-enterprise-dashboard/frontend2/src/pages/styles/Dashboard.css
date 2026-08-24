@@ -1,0 +1,1045 @@
+/* ══════════════════════════════════════════════
+   FORGE DASHBOARD — Industrial Command Center
+   ══════════════════════════════════════════════ */
+
+.dash-root {
+  padding: 22px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 100%;
+}
+
+/* ── Page Header ────────────────────────────── */
+.dash-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--forge-plate);
+  border: 1px solid var(--border-steel);
+  padding: 0;
+  overflow: hidden;
+}
+
+.dash-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--amber) 0px, var(--amber) 5px,
+    var(--forge-dark) 5px, var(--forge-dark) 10px
+  );
+  opacity: 0.65;
+}
+
+.dash-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 18px 0 14px;
+}
+
+.dash-header-accent {
+  width: 5px;
+  align-self: stretch;
+  background: var(--amber);
+  box-shadow: 2px 0 12px rgba(245,158,11,0.4);
+  flex-shrink: 0;
+}
+
+.dash-header-text {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dash-header-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  color: var(--text-faint);
+}
+
+.dash-header-title {
+  font-family: var(--font-brand);
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--text-bright);
+  line-height: 1;
+}
+
+.dash-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 20px 0 0;
+}
+
+.dash-system-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: rgba(74,222,128,0.07);
+  border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 2px;
+}
+
+.dash-status-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--green-op);
+}
+
+.dash-last-updated {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+/* Refresh button */
+.dash-refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  background: var(--forge-lift);
+  border: 1px solid var(--border-steel);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.dash-refresh-btn:hover {
+  background: var(--forge-groove);
+  border-color: var(--border-amber);
+  color: var(--amber);
+}
+
+.dash-refresh-btn.spinning svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Error banner ───────────────────────────── */
+.dash-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(248,113,113,0.06);
+  border: 1px solid rgba(248,113,113,0.3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--red-alert);
+}
+
+/* ── KPI Grid ───────────────────────────────── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+/* KPI Card */
+.kpi-card {
+  position: relative;
+  background: var(--forge-plate);
+  border: 1px solid var(--border-steel);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+  border-color: var(--border-amber);
+  box-shadow: 0 0 20px rgba(245,158,11,0.08);
+}
+
+/* Top accent bar */
+.kpi-top-bar {
+  height: 3px;
+  flex-shrink: 0;
+}
+
+.kpi-body {
+  padding: 14px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+}
+
+.kpi-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.kpi-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid;
+}
+
+.kpi-cat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+  text-align: right;
+}
+
+.kpi-value {
+  font-family: var(--font-brand);
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
+}
+
+.kpi-sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  margin-bottom: 12px;
+}
+
+/* Mini progress bar (segmented) */
+.kpi-meter {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.kpi-meter-seg {
+  flex: 1;
+  height: 4px;
+  border-radius: 1px;
+}
+
+/* Trend badge */
+.kpi-trend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.trend-up   { color: var(--green-op); }
+.trend-down { color: var(--red-alert); }
+
+/* ── Chart panel ────────────────────────────── */
+.forge-chart-panel {
+  position: relative;
+  background: var(--forge-panel);
+  border: 1px solid var(--border-steel);
+  overflow: hidden;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 3px,
+    rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
+  );
+}
+
+.chart-panel-header {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border-steel);
+}
+
+.chart-panel-tab {
+  width: 4px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.chart-panel-titles {
+  flex: 1;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chart-panel-name {
+  font-family: var(--font-brand);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--text-bright);
+}
+
+.chart-panel-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-faint);
+}
+
+.chart-panel-id {
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+  align-self: flex-end;
+}
+
+.chart-area {
+  padding: 16px 12px 12px;
+}
+
+/* ── Chart grids ────────────────────────────── */
+.chart-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── Inventory horizontal bars ──────────────── */
+.inv-bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 16px;
+}
+
+.inv-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.inv-bar-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inv-bar-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-mid);
+}
+
+.inv-bar-val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+}
+
+.inv-bar-track {
+  width: 100%;
+  height: 8px;
+  background: var(--forge-groove);
+  border: 1px solid var(--border-steel);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.inv-bar-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.8s ease;
+}
+
+/* Segmented look on inventory bar */
+.inv-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0, transparent 10px,
+    rgba(0,0,0,0.25) 10px, rgba(0,0,0,0.25) 11px
+  );
+}
+
+/* ── Sales region table ─────────────────────── */
+.sales-region-list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sales-region-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sales-region-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sales-region-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--text-mid);
+  width: 62px;
+  flex-shrink: 0;
+}
+
+.sales-region-track {
+  flex: 1;
+  height: 8px;
+  background: var(--forge-groove);
+  border: 1px solid var(--border-steel);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sales-region-fill {
+  height: 100%;
+  border-radius: 1px;
+}
+
+.sales-region-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0, transparent 8px,
+    rgba(0,0,0,0.2) 8px, rgba(0,0,0,0.2) 9px
+  );
+}
+
+.sales-region-pct {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.sales-region-rev {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--amber);
+  width: 72px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Operational Summary ────────────────────── */
+.ops-panel {
+  position: relative;
+  background: var(--forge-plate);
+  border: 1px solid var(--border-steel);
+  overflow: hidden;
+}
+
+.ops-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(248,113,113,0.7) 0px, rgba(248,113,113,0.7) 5px,
+    var(--forge-dark) 5px, var(--forge-dark) 10px
+  );
+}
+
+.ops-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid var(--border-steel);
+}
+
+.ops-title {
+  font-family: var(--font-brand);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--text-bright);
+}
+
+.ops-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-faint);
+}
+
+.ops-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(248,113,113,0.08);
+  border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--red-alert);
+}
+
+.ops-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.ops-metric {
+  padding: 16px 20px;
+  border-right: 1px solid var(--border-steel);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ops-metric:last-child {
+  border-right: none;
+}
+
+.ops-metric::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+
+.ops-metric-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+}
+
+.ops-metric-value {
+  font-family: var(--font-brand);
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.ops-metric-desc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+
+/* ── Loading screen ─────────────────────────── */
+.dash-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 20px;
+}
+
+.loading-ring {
+  width: 56px;
+  height: 56px;
+  border: 3px solid var(--border-steel);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 16px rgba(245,158,11,0.3);
+}
+
+.loading-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--text-faint);
+}
+
+.loading-dots span {
+  animation: blink 1.2s ease-in-out infinite;
+  color: var(--amber);
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.2; }
+  40%            { opacity: 1; }
+}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 1100px) {
+  .kpi-grid      { grid-template-columns: repeat(3, 1fr); }
+  .chart-grid-2  { grid-template-columns: 1fr; }
+  .ops-grid      { grid-template-columns: 1fr; }
+  .ops-metric    { border-right: none; border-bottom: 1px solid var(--border-steel); }
+  .ops-metric:last-child { border-bottom: none; }
+}
+
+@media (max-width: 700px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .dash-header-right { padding: 0 0 14px 20px; }
+}
+
+/* ══════════════════════════════════════════════
+   LIGHT THEME OVERRIDES — Dashboard
+   Keep existing background — remove neon effects
+   ══════════════════════════════════════════════ */
+
+html[data-theme="light"] .forge-chart-panel {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.02) 3px,
+    rgba(0,0,0,0.02) 4px
+  );
+}
+
+/* Operational warning stripe — solid, not neon */
+html[data-theme="light"] .ops-panel::before {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(185,28,28,0.45) 0px,
+    rgba(185,28,28,0.45) 5px,
+    var(--forge-dark) 5px,
+    var(--forge-dark) 10px
+  );
+}
+
+/* Header stripe — keep industrial look */
+html[data-theme="light"] .dash-header::before {
+  opacity: 0.5;
+}
+
+/* Header accent — remove glow */
+html[data-theme="light"] .dash-header-accent {
+  box-shadow: none;
+}
+
+/* KPI cards — no neon hover glow */
+html[data-theme="light"] .kpi-card:hover {
+  box-shadow: none;
+  border-color: var(--border-amber);
+}
+
+/* Loading ring — keep animation, remove glow */
+html[data-theme="light"] .loading-ring {
+  box-shadow: none;
+}
+
+/* ══════════════════════════════════════════════
+   THEME-SAFE EFFECT TOKENS
+   Dark mode preserves the original Forge glow.
+   Light mode disables glow without changing layout.
+   ══════════════════════════════════════════════ */
+
+:root {
+  --chart-grid: rgba(46, 43, 30, 0.9);
+  --donut-stroke: #15140f;
+  --chart-separator: rgba(0, 0, 0, 0.22);
+
+  --tooltip-bg: #1c1a14;
+  --tooltip-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+
+  --glow-green: 0 0 6px var(--green-op);
+  --glow-red: 0 0 6px var(--red-alert);
+
+  --glow-amber-text: 0 0 8px rgba(245, 158, 11, 0.55);
+  --glow-amber-text-strong: 0 0 10px rgba(245, 158, 11, 0.5);
+
+  --kpi-bar-glow: 0 2px 8px color-mix(
+    in srgb,
+    var(--kpi-color) 38%,
+    transparent
+  );
+
+  --kpi-value-glow: 0 0 12px color-mix(
+    in srgb,
+    var(--kpi-color) 45%,
+    transparent
+  );
+
+  --meter-glow: 0 0 4px color-mix(
+    in srgb,
+    var(--meter-color) 55%,
+    transparent
+  );
+
+  --inventory-glow: 0 0 8px color-mix(
+    in srgb,
+    var(--inventory-color) 40%,
+    transparent
+  );
+
+  --region-glow: 0 0 5px var(--region-color),
+                 0 0 10px color-mix(
+                   in srgb,
+                   var(--region-color) 34%,
+                   transparent
+                 );
+
+  --metric-glow: 0 0 10px color-mix(
+    in srgb,
+    var(--metric-color) 45%,
+    transparent
+  );
+}
+
+html[data-theme="light"] {
+  --chart-grid: rgba(91, 73, 47, 0.18);
+  --donut-stroke: #f4eee4;
+  --chart-separator: rgba(80, 60, 35, 0.12);
+
+  --tooltip-bg: #f9f5ee;
+  --tooltip-shadow: 0 5px 14px rgba(70, 50, 30, 0.10);
+
+  --glow-green: none;
+  --glow-red: none;
+
+  --glow-amber-text: none;
+  --glow-amber-text-strong: none;
+
+  --kpi-bar-glow: none;
+  --kpi-value-glow: none;
+  --meter-glow: none;
+  --inventory-glow: none;
+  --region-glow: none;
+  --metric-glow: none;
+}
+
+/* ── KPI glow — dark only ───────────────────── */
+
+.kpi-top-bar {
+  box-shadow: var(--kpi-bar-glow);
+}
+
+.kpi-value {
+  text-shadow: var(--kpi-value-glow);
+}
+
+.kpi-meter-seg[style*="--meter-color"] {
+  box-shadow: var(--meter-glow);
+}
+
+/* ── Inventory segmented grid ───────────────── */
+
+.inv-bar-track {
+  background-color: var(--forge-groove);
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 12px,
+    var(--chart-separator) 12px,
+    var(--chart-separator) 13px
+  );
+}
+
+.inv-bar-fill {
+  position: relative;
+  box-shadow: var(--inventory-glow);
+}
+
+.inv-bar-fill::after {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 10px,
+    var(--chart-separator) 10px,
+    var(--chart-separator) 11px
+  );
+}
+
+/* ── Sales region meters ───────────────────── */
+
+.sales-region-dot {
+  box-shadow: var(--region-glow);
+}
+
+.sales-region-fill {
+  box-shadow: 0 0 5px color-mix(
+    in srgb,
+    var(--region-color) 50%,
+    transparent
+  );
+}
+
+/* ── Operational metrics ───────────────────── */
+
+.ops-metric-edge {
+  flex-shrink: 0;
+}
+
+.metric-glow {
+  text-shadow: var(--metric-glow);
+}
+
+.ops-metric-edge.metric-glow {
+  box-shadow: 2px 0 8px color-mix(
+    in srgb,
+    var(--metric-color) 45%,
+    transparent
+  );
+}
+
+.ops-status-line {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+}
+
+.ops-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: var(--metric-glow);
+}
+
+.ops-segment-meter {
+  margin-top: 10px;
+  display: flex;
+  gap: 2px;
+}
+
+.ops-segment {
+  flex: 1;
+  height: 4px;
+  border-radius: 1px;
+  background: var(--forge-groove);
+  border: 1px solid var(--border-steel);
+}
+
+.ops-segment.filled {
+  background: color-mix(
+    in srgb,
+    var(--accent-purple) 56%,
+    transparent
+  );
+  border: none;
+}
+
+.ops-open-label {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+}
+
+.ops-alert-lights {
+  margin-top: 10px;
+  display: flex;
+  gap: 6px;
+}
+
+.ops-alert-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-red);
+  box-shadow: 0 0 6px color-mix(
+    in srgb,
+    var(--accent-red) 70%,
+    transparent
+  );
+  animation: led-pulse 1.2s ease-in-out infinite;
+}
+.ops-metric {
+  padding: 16px 20px;
+  border-right: 1px solid var(--border-steel);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ops-metric:last-child {
+  border-right: none;
+}
+
+/* ORIGINAL STRUCTURAL SIDE STRIP */
+.ops-metric::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--ops-strip-color);
+}
+
+/* Dark theme — original colors */
+.ops-metric:nth-child(1) {
+  --ops-strip-color: #f59e0b;
+}
+
+.ops-metric:nth-child(2) {
+  --ops-strip-color: #a78bfa;
+}
+
+.ops-metric:nth-child(3) {
+  --ops-strip-color: #f87171;
+}
+
+/* Light theme — muted complementary colors */
+html[data-theme="light"] .ops-metric:nth-child(1) {
+  --ops-strip-color: #a8621a;
+}
+
+html[data-theme="light"] .ops-metric:nth-child(2) {
+  --ops-strip-color: #735b86;
+}
+
+html[data-theme="light"] .ops-metric:nth-child(3) {
+  --ops-strip-color: #a94b4b;
+}
+
+/* ── Chart grid / SVG surface ──────────────── */
+
+.recharts-wrapper,
+.recharts-surface {
+  overflow: visible;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  shape-rendering: crispEdges;
+}
+
+/* ── Empty state ───────────────────────────── */
+
+.chart-empty-state {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
+}
+
+/* ── Light mode: explicitly remove remaining neon ── */
+
+html[data-theme="light"] .kpi-card:hover {
+  box-shadow: none;
+}
+
+html[data-theme="light"] .dash-header-accent,
+html[data-theme="light"] .loading-ring {
+  box-shadow: none;
+}
+
+html[data-theme="light"] .sales-region-dot,
+html[data-theme="light"] .sales-region-fill,
+html[data-theme="light"] .inv-bar-fill,
+html[data-theme="light"] .ops-metric-edge.metric-glow,
+html[data-theme="light"] .ops-status-dot,
+html[data-theme="light"] .ops-alert-light {
+  box-shadow: none;
+}
+
+html[data-theme="light"] .metric-glow {
+  text-shadow: none;
+}
+
+html[data-theme="light"] .dash-system-status {
+  background: rgba(53, 122, 77, 0.07);
+  border-color: rgba(53, 122, 77, 0.20);
+}
+
+html[data-theme="light"] .ops-tag {
+  background: rgba(169, 75, 75, 0.07);
+  border-color: rgba(169, 75, 75, 0.22);
+}
+
+html[data-theme="light"] .forge-chart-panel {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.02) 3px,
+    rgba(0, 0, 0, 0.02) 4px
+  );
+}
+
+html[data-theme="light"] .inv-bar-track {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 12px,
+    rgba(80, 60, 35, 0.12) 12px,
+    rgba(80, 60, 35, 0.12) 13px
+  );
+}
+
+/* ── Responsive chart / region layout ───────── */
+
+@media (max-width: 900px) {
+  .forge-chart-panel {
+    min-width: 0;
+  }
+
+  .chart-panel-name {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 620px) {
+  .dash-root {
+    padding: 16px 12px 24px;
+  }
+
+  .dash-header-right {
+    flex-wrap: wrap;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}

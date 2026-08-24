@@ -1,0 +1,1033 @@
+/* ══════════════════════════════════════════════
+   DATA SOURCES — ETL Pipeline Terminal
+   Accent: indigo #818cf8
+   ══════════════════════════════════════════════ */
+
+:root {
+  --ds: #818cf8;
+  --ds-dim: #312e81;
+  --ds-glow: rgba(129, 140, 248, 0.16);
+}
+
+.ds-root {
+  padding: 22px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100%;
+}
+
+/* ── Header ─────────────────────────────────── */
+.ds-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--forge-plate);
+  border: 1px solid var(--border-steel);
+  overflow: hidden;
+}
+
+.ds-header-stripe {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--ds) 0px, var(--ds) 5px,
+    var(--forge-dark) 5px, var(--forge-dark) 10px
+  );
+  opacity: 0.6;
+}
+
+.ds-header-left {
+  display: flex;
+  align-items: stretch;
+  padding: 16px 0 14px;
+}
+
+.ds-header-accent {
+  width: 4px;
+  align-self: stretch;
+  background: var(--ds);
+  box-shadow: 2px 0 12px var(--ds-glow);
+  flex-shrink: 0;
+}
+
+.ds-header-text {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ds-module-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--text-faint);
+}
+
+.ds-title {
+  font-family: var(--font-brand);
+  font-size: 24px;
+  letter-spacing: 0.06em;
+  color: var(--text-bright);
+  margin: 0;
+  line-height: 1;
+}
+
+.ds-subtitle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+
+.ds-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 20px;
+}
+
+.ds-status-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: rgba(129,140,248,0.07);
+  border: 1px solid rgba(129,140,248,0.22);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--ds);
+}
+
+.ds-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ds);
+  box-shadow: 0 0 7px var(--ds);
+  animation: ds-pulse 2.2s ease-in-out infinite;
+}
+
+/* ── ETL Pipeline visualization ─────────────── */
+.ds-pipeline-panel {
+  background: var(--forge-panel);
+  border: 1px solid var(--border-steel);
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ds-pipeline-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(129,140,248,0.04) 19px, rgba(129,140,248,0.04) 20px),
+    repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(129,140,248,0.04) 19px, rgba(129,140,248,0.04) 20px);
+  pointer-events: none;
+}
+
+.ds-pipeline-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--text-faint);
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.ds-pipeline-nodes {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+.ds-pipe-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 140px;
+}
+
+.ds-pipe-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 4px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: box-shadow 0.3s;
+}
+
+.ds-pipe-icon.active {
+  animation: ds-node-glow 2s ease-in-out infinite;
+}
+
+.ds-pipe-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--text-mid);
+  text-align: center;
+}
+
+.ds-pipe-sub {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+/* Connector line between nodes */
+.ds-pipe-connector {
+  flex: 1;
+  height: 2px;
+  margin-bottom: 30px;
+  position: relative;
+  background: var(--border-steel);
+  overflow: hidden;
+}
+
+.ds-pipe-connector::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -40%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--ds), transparent);
+  animation: pipe-flow 2s linear infinite;
+}
+
+/* ── Upload card ────────────────────────────── */
+.ds-upload-card {
+  background: var(--forge-panel);
+  border: 1px solid var(--border-steel);
+  overflow: hidden;
+  position: relative;
+}
+
+.ds-upload-card-header {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border-steel);
+}
+
+.ds-upload-tab {
+  width: 4px;
+  background: var(--ds);
+  box-shadow: 2px 0 10px var(--ds-glow);
+  flex-shrink: 0;
+}
+
+.ds-upload-titles {
+  flex: 1;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ds-upload-name {
+  font-family: var(--font-brand);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--text-bright);
+}
+
+.ds-upload-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+}
+
+.ds-upload-body {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Department select ──────────────────────── */
+.ds-field-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+  margin-bottom: 7px;
+}
+
+.ds-select-wrap {
+  position: relative;
+}
+
+.ds-select {
+  width: 100%;
+  max-width: 280px;
+  padding: 9px 36px 9px 12px;
+  background: var(--forge-dark);
+  border: 1px solid var(--border-steel);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-bright);
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.ds-select:focus {
+  outline: none;
+  border-color: rgba(129,140,248,0.4);
+}
+
+.ds-select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ds-select-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-faint);
+}
+
+/* ── Drop zone ──────────────────────────────── */
+.ds-drop-zone {
+  position: relative;
+  border: 2px dashed var(--border-steel);
+  border-radius: 3px;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: var(--forge-dark);
+  overflow: hidden;
+  min-height: 160px;
+  justify-content: center;
+}
+
+.ds-drop-zone:hover,
+.ds-drop-zone.dragging {
+  border-color: rgba(129,140,248,0.5);
+  background: rgba(129,140,248,0.04);
+}
+
+/* Circuit board grid background */
+.ds-drop-zone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(129,140,248,0.06) 24px, rgba(129,140,248,0.06) 25px),
+    repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(129,140,248,0.06) 24px, rgba(129,140,248,0.06) 25px);
+  pointer-events: none;
+}
+
+.ds-drop-zone.dragging::before {
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(129,140,248,0.14) 24px, rgba(129,140,248,0.14) 25px),
+    repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(129,140,248,0.14) 24px, rgba(129,140,248,0.14) 25px);
+}
+
+/* Scan sweep on drag */
+.ds-drop-zone.dragging::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ds), transparent);
+  animation: ds-scan 1.2s linear infinite;
+  top: 0;
+}
+
+.ds-drop-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 4px;
+  background: rgba(129,140,248,0.1);
+  border: 1px solid rgba(129,140,248,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ds);
+  position: relative;
+  animation: ds-float 3s ease-in-out infinite;
+}
+
+.ds-drop-title {
+  font-family: var(--font-brand);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--text-bright);
+  text-align: center;
+  position: relative;
+}
+
+.ds-drop-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-mid);
+  position: relative;
+}
+
+.ds-drop-formats {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-faint);
+  padding: 3px 10px;
+  border: 1px solid var(--border-steel);
+  border-radius: 2px;
+  background: var(--forge-lift);
+  position: relative;
+}
+
+/* ── Selected file ──────────────────────────── */
+.ds-file-selected {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(129,140,248,0.06);
+  border: 1px solid rgba(129,140,248,0.25);
+  border-radius: 2px;
+}
+
+.ds-file-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 2px;
+  background: rgba(129,140,248,0.12);
+  border: 1px solid rgba(129,140,248,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ds);
+  flex-shrink: 0;
+}
+
+.ds-file-name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--text-bright);
+  display: block;
+}
+
+.ds-file-size {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  display: block;
+}
+
+.ds-remove-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.ds-remove-btn:hover { color: var(--red-alert); }
+.ds-remove-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Messages ───────────────────────────────── */
+.ds-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.ds-message-error {
+  background: rgba(248,113,113,0.08);
+  border: 1px solid rgba(248,113,113,0.3);
+  color: var(--red-alert);
+}
+
+.ds-message-success {
+  background: rgba(74,222,128,0.08);
+  border: 1px solid rgba(74,222,128,0.3);
+  color: var(--green-op);
+}
+
+/* ── Upload button ──────────────────────────── */
+.ds-upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 24px;
+  background: rgba(129,140,248,0.12);
+  border: 1px solid rgba(129,140,248,0.4);
+  border-radius: 2px;
+  font-family: var(--font-brand);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--ds);
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-start;
+  box-shadow: 0 0 20px rgba(129,140,248,0.08);
+}
+
+.ds-upload-btn:hover:not(:disabled) {
+  background: rgba(129,140,248,0.2);
+  border-color: rgba(129,140,248,0.6);
+  box-shadow: 0 0 24px rgba(129,140,248,0.2);
+}
+
+.ds-upload-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Animations ─────────────────────────────── */
+@keyframes ds-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+@keyframes ds-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+@keyframes ds-scan {
+  0%   { top: 0%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@keyframes ds-node-glow {
+  0%, 100% { box-shadow: 0 0 8px var(--ds-glow); }
+  50%       { box-shadow: 0 0 20px rgba(129,140,248,0.35); }
+}
+
+@keyframes pipe-flow {
+  from { left: -40%; }
+  to   { left: 140%; }
+}
+
+@keyframes ds-spin { to { transform: rotate(360deg); } }
+
+.ds-spin { animation: ds-spin 1s linear infinite; }
+
+/* ══════════════════════════════════════════════
+   LIGHT THEME OVERRIDES — Data Sources
+   ══════════════════════════════════════════════ */
+html[data-theme="light"] .ds-pipeline-panel::before {
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(129,140,248,0.03) 19px, rgba(129,140,248,0.03) 20px),
+    repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(129,140,248,0.03) 19px, rgba(129,140,248,0.03) 20px);
+}
+
+html[data-theme="light"] .ds-drop-zone {
+  background: var(--forge-groove);
+}
+
+html[data-theme="light"] .ds-drop-zone:hover,
+html[data-theme="light"] .ds-drop-zone.dragging {
+  background: rgba(129,140,248,0.06);
+}
+
+html[data-theme="light"] .ds-select {
+  color: var(--text-bright);
+}
+
+
+
+/* =========================================================
+   CUSTOM DEPARTMENT SELECT
+   ========================================================= */
+
+.ds-custom-select {
+  position: relative;
+  width: 100%;
+}
+
+/* Main closed box */
+.ds-select-trigger {
+  width: 100%;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 14px;
+
+  background: var(--forge-dark);
+  border: 1px solid var(--border-steel);
+
+  color: var(--text-bright);
+
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ds-select-trigger:hover {
+  border-color: #818cf8;
+  background: #11120e;
+}
+
+.ds-select-trigger.open {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.15);
+}
+
+/* Arrow */
+.ds-custom-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  color: var(--text-faint);
+
+  transition: transform 0.2s ease;
+}
+
+.ds-select-trigger.open .ds-custom-arrow {
+  transform: rotate(180deg);
+  color: #a78bfa;
+}
+
+
+/* =========================================================
+   DROPDOWN MENU
+   ========================================================= */
+
+.ds-select-menu {
+  position: absolute;
+
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+
+  z-index: 100;
+
+  padding: 5px;
+
+  background: #0c0d0a;
+
+  border: 1px solid #34372f;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+
+  animation: dsDropdownIn 0.12s ease-out;
+}
+
+@keyframes dsDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   OPTIONS
+   ========================================================= */
+
+.ds-select-option {
+  position: relative;
+
+  width: 100%;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  padding: 0 10px;
+
+  border: none;
+  background: transparent;
+
+  color: var(--text-faint);
+
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.ds-select-option:hover {
+  background: #171914;
+  color: var(--text-bright);
+}
+
+/* Selected option */
+.ds-select-option.selected {
+  background: rgba(129, 140, 248, 0.08);
+  color: #a78bfa;
+}
+
+/* Left numbering */
+.ds-option-index {
+  width: 22px;
+
+  color: #55594f;
+
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.ds-select-option:hover .ds-option-index {
+  color: #818cf8;
+}
+
+.ds-select-option.selected .ds-option-index {
+  color: #818cf8;
+}
+
+/* Checkmark */
+.ds-option-check {
+  margin-left: auto;
+
+  color: #34d399;
+
+  font-size: 13px;
+}
+
+
+/* ═════════════════════════════════════════════════════════════
+   LIGHT THEME — DATA SOURCES
+   Keep the parchment background, remove neon/glow, improve
+   contrast and readability. Dark theme above remains unchanged.
+   ═════════════════════════════════════════════════════════════ */
+
+html[data-theme="light"] .ds-header,
+html[data-theme="light"] .ds-pipeline-panel,
+html[data-theme="light"] .ds-upload-card {
+  background: var(--forge-plate);
+  border-color: var(--border-steel);
+  box-shadow: none;
+}
+
+html[data-theme="light"] .ds-header-stripe {
+  opacity: 0.75;
+}
+
+html[data-theme="light"] .ds-header-accent,
+html[data-theme="light"] .ds-upload-tab {
+  background: #6d5a78;
+  box-shadow: none;
+}
+
+html[data-theme="light"] .ds-module-id,
+html[data-theme="light"] .ds-subtitle,
+html[data-theme="light"] .ds-pipeline-label,
+html[data-theme="light"] .ds-pipe-sub,
+html[data-theme="light"] .ds-upload-sub,
+html[data-theme="light"] .ds-field-label,
+html[data-theme="light"] .ds-file-size,
+html[data-theme="light"] .ds-remove-btn {
+  color: #5f4e3b;
+}
+
+html[data-theme="light"] .ds-title,
+html[data-theme="light"] .ds-upload-name,
+html[data-theme="light"] .ds-drop-title,
+html[data-theme="light"] .ds-file-name {
+  color: #21180f;
+}
+
+html[data-theme="light"] .ds-status-chip {
+  background: #e7eee4;
+  border-color: #a9c5ad;
+  color: #28623b;
+}
+
+html[data-theme="light"] .ds-status-dot {
+  background: #3f7f4f;
+  box-shadow: none;
+  animation: none;
+}
+
+/* Pipeline grid: subtle paper grid instead of neon grid */
+html[data-theme="light"] .ds-pipeline-panel::before {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 19px,
+      rgba(110, 91, 65, 0.055) 19px,
+      rgba(110, 91, 65, 0.055) 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 19px,
+      rgba(110, 91, 65, 0.055) 19px,
+      rgba(110, 91, 65, 0.055) 20px
+    );
+}
+
+/* Pipeline nodes */
+html[data-theme="light"] .ds-pipe-icon {
+  box-shadow: none;
+}
+
+html[data-theme="light"] .ds-pipe-icon.active {
+  animation: none;
+  box-shadow: none;
+}
+
+html[data-theme="light"] .ds-pipe-label {
+  color: #443421;
+}
+
+html[data-theme="light"] .ds-pipe-connector {
+  background: #c8baa4;
+}
+
+html[data-theme="light"] .ds-pipe-connector::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #75627f,
+    transparent
+  );
+  animation-duration: 5s;
+}
+
+/* Upload area */
+html[data-theme="light"] .ds-upload-card-header {
+  border-bottom-color: var(--border-steel);
+}
+
+html[data-theme="light"] .ds-select,
+html[data-theme="light"] .ds-select-trigger {
+  background: #f4eee4;
+  color: #21180f;
+  border-color: #bca889;
+}
+
+html[data-theme="light"] .ds-select:focus,
+html[data-theme="light"] .ds-select-trigger:hover,
+html[data-theme="light"] .ds-select-trigger.open {
+  border-color: #75627f;
+  box-shadow: none;
+}
+
+html[data-theme="light"] .ds-select-trigger:hover {
+  background: #eee6d9;
+}
+
+html[data-theme="light"] .ds-custom-arrow,
+html[data-theme="light"] .ds-select-arrow {
+  color: #5f4e3b;
+}
+
+html[data-theme="light"] .ds-select-trigger.open .ds-custom-arrow {
+  color: #75627f;
+}
+
+/* Custom dropdown — replace the hard-coded dark dropdown */
+html[data-theme="light"] .ds-select-menu {
+  background: #f8f3ea;
+  border-color: #bca889;
+  box-shadow: 0 8px 20px rgba(66, 48, 30, 0.14);
+}
+
+html[data-theme="light"] .ds-select-option {
+  color: #5f4e3b;
+}
+
+html[data-theme="light"] .ds-select-option:hover {
+  background: #ece3d5;
+  color: #21180f;
+}
+
+html[data-theme="light"] .ds-select-option.selected {
+  background: #e8e0eb;
+  color: #665275;
+}
+
+html[data-theme="light"] .ds-option-index {
+  color: #8a7965;
+}
+
+html[data-theme="light"] .ds-select-option:hover .ds-option-index,
+html[data-theme="light"] .ds-select-option.selected .ds-option-index {
+  color: #665275;
+}
+
+html[data-theme="light"] .ds-option-check {
+  color: #357a4d;
+}
+
+/* Drop zone */
+html[data-theme="light"] .ds-drop-zone {
+  background: #eee7da;
+  border-color: #bcae98;
+}
+
+html[data-theme="light"] .ds-drop-zone:hover,
+html[data-theme="light"] .ds-drop-zone.dragging {
+  background: #e8dfd1;
+  border-color: #75627f;
+}
+
+html[data-theme="light"] .ds-drop-zone::before {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 24px,
+      rgba(110, 91, 65, 0.06) 24px,
+      rgba(110, 91, 65, 0.06) 25px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 24px,
+      rgba(110, 91, 65, 0.06) 24px,
+      rgba(110, 91, 65, 0.06) 25px
+    );
+}
+
+html[data-theme="light"] .ds-drop-zone.dragging::before {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 24px,
+      rgba(117, 98, 127, 0.10) 24px,
+      rgba(117, 98, 127, 0.10) 25px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 24px,
+      rgba(117, 98, 127, 0.10) 24px,
+      rgba(117, 98, 127, 0.10) 25px
+    );
+}
+
+html[data-theme="light"] .ds-drop-zone.dragging::after {
+  background: linear-gradient(90deg, transparent, #75627f, transparent);
+}
+
+html[data-theme="light"] .ds-drop-icon {
+  background: #ebe4ef;
+  border-color: #c4b5ce;
+  color: #665275;
+  animation: none;
+}
+
+html[data-theme="light"] .ds-drop-sub {
+  color: #5f4e3b;
+}
+
+html[data-theme="light"] .ds-drop-formats {
+  color: #665847;
+  background: #e3d9ca;
+  border-color: #bcae98;
+}
+
+/* Selected file */
+html[data-theme="light"] .ds-file-selected {
+  background: #eee8f1;
+  border-color: #c4b5ce;
+}
+
+html[data-theme="light"] .ds-file-icon {
+  background: #e5dceb;
+  border-color: #c4b5ce;
+  color: #665275;
+}
+
+/* Messages */
+html[data-theme="light"] .ds-message-error {
+  background: #f8e8e6;
+  border-color: #d8aaa5;
+  color: #a33f3f;
+}
+
+html[data-theme="light"] .ds-message-success {
+  background: #e7f0e7;
+  border-color: #afd0b5;
+  color: #28623b;
+}
+
+/* Upload button */
+html[data-theme="light"] .ds-upload-btn {
+  background: #e8e0eb;
+  border-color: #b9a8c5;
+  color: #665275;
+  box-shadow: none;
+}
+
+html[data-theme="light"] .ds-upload-btn:hover:not(:disabled) {
+  background: #ded4e2;
+  border-color: #8c7699;
+  box-shadow: none;
+}
+
+/* Light mode should not use the dark neon node glow */
+html[data-theme="light"] .ds-pipe-icon.active {
+  animation: none;
+}
+
+html[data-theme="light"] .ds-status-dot,
+html[data-theme="light"] .ds-drop-icon {
+  animation: none;
+}

@@ -164,11 +164,7 @@ export const getFinanceTrend = async (req, res) => {
 3. INVENTORY OVERVIEW
 ==================================================
 */
-
-export const getInventoryOverview = async (
-  req,
-  res
-) => {
+export const getInventoryOverview = async (req, res) => {
   try {
     const { companyId } = req.query;
 
@@ -179,25 +175,58 @@ export const getInventoryOverview = async (
       });
     }
 
-    const records =
-      await InventoryRecord.find({
-        companyId,
-      }).lean();
+    const records = await InventoryRecord.find({
+      companyId,
+    })
+      .sort({ createdAt: 1 })
+      .lean();
 
-    const data = records.map((record) => ({
-      productId: record.productId,
-      productName: record.productName,
-      openingStock:
-        Number(record.openingStock) || 0,
-      producedQuantity:
-        Number(record.producedQuantity) || 0,
-      soldQuantity:
-        Number(record.soldQuantity) || 0,
-      closingStock:
-        Number(record.closingStock) || 0,
-      warehouse:
-        record.warehouse || "Main Warehouse",
-    }));
+    const data = records.map((record) => {
+      const closingStock = Number(record.closingStock) || 0;
+
+      const openingStock = Number(record.openingStock) || 0;
+
+      const producedQuantity =
+        Number(record.producedQuantity) || 0;
+
+      const soldQuantity =
+        Number(record.soldQuantity) || 0;
+
+      /*
+       * Maximum stock used by the dashboard bar.
+       *
+       * We use the highest meaningful stock value
+       * available for this inventory record.
+       */
+      const max = Math.max(
+        openingStock,
+        closingStock,
+        producedQuantity,
+        1
+      );
+
+      return {
+        product: record.productName || "Unknown Product",
+
+        units: closingStock,
+
+        max,
+
+        // Keep the original backend values too
+        productId: record.productId,
+
+        openingStock,
+
+        producedQuantity,
+
+        soldQuantity,
+
+        closingStock,
+
+        warehouse:
+          record.warehouse || "Main Warehouse",
+      };
+    });
 
     return res.json({
       success: true,
@@ -218,7 +247,6 @@ export const getInventoryOverview = async (
     });
   }
 };
-
 
 /*
 ==================================================

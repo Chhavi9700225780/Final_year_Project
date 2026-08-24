@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState } from "react";
 
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
@@ -54,25 +54,44 @@ const App = () => {
         return <Dashboard />;
     }
   };
+    // Theme state — persisted in localStorage
+const [theme, setTheme] = useState(() => {
+  const stored = localStorage.getItem("forge-theme")
+  return stored === "light" ? "light" : "dark"
+})
+
+// Apply theme to <html> element
+useEffect(() => {
+  document.documentElement.setAttribute("data-theme", theme)
+  localStorage.setItem("forge-theme", theme)
+}, [theme])
+
+const toggleTheme = () => {
+  setTheme((t) => (t === "dark" ? "light" : "dark"))
+}
 
   return (
-    <div className="app">
+    <div className="app" style={{ display: "flex", minHeight: "100vh", background: "var(--forge-dark)" }}>
       
       <Sidebar
         activePage={activePage}
         setActivePage={setActivePage}
       />
+   <div style={{ marginLeft: 262, flex: 1, display: "flex", flexDirection: "column", minHeight: "100vh" }} >
+        
+         <Navbar activePage={activePage} theme={theme} onToggleTheme={toggleTheme} onAlertsClick={() => setActivePage("Alerts")} />
 
-      <main className="main-content">
+           <main className="main-content" style={{ marginTop: 62, flex: 1, overflowY: "auto" }}>
 
-        <Navbar />
-
+       
         <section className="page-content">
           {renderPage()}
         </section>
           
       </main>
 
+   </div>
+      
     </div>
   );
 };

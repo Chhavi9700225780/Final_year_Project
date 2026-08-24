@@ -1,0 +1,500 @@
+/* ══════════════════════════════════════════════
+   FORGE SIDEBAR — Industrial Retro Control Panel
+   ══════════════════════════════════════════════ */
+
+.forge-sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 262px;
+  display: flex;
+  flex-direction: column;
+  background: var(--forge-panel);
+  border-right: 1px solid var(--border-steel);
+  box-shadow: var(--sidebar-shadow), inset -1px 0 0 rgba(255,255,255,0.03);
+  overflow: hidden;
+  z-index: 1000;
+  /* Subtle noise texture via pseudo repeating pattern */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.06) 3px,
+      rgba(0,0,0,0.06) 4px
+    );
+}
+
+/* Scanlines overlay */
+.forge-sidebar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 3px,
+    rgba(0, 0, 0, 0.07) 3px,
+    rgba(0, 0, 0, 0.07) 4px
+  );
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* ── Warning stripe ─────────────────────────── */
+.warning-stripe {
+  height: 5px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--amber) 0px,
+    var(--amber) 5px,
+    var(--forge-dark) 5px,
+    var(--forge-dark) 10px
+  );
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* ── Header panel ───────────────────────────── */
+.forge-header {
+  position: relative;
+  flex-shrink: 0;
+  background: var(--forge-plate);
+  border-bottom: 1px solid var(--border-steel);
+}
+
+.forge-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px 16px;
+}
+
+.forge-factory-icon {
+  flex-shrink: 0;
+  color: var(--amber);
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5));
+}
+
+.forge-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.forge-brand-name {
+  font-family: var(--font-brand);
+  font-size: 30px;
+  line-height: 0.9;
+  color: var(--amber-bright);
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 12px rgba(245, 158, 11, 0.6), 0 0 28px rgba(245, 158, 11, 0.2);
+}
+
+.forge-brand-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--text-mid);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+/* ── Rivet bolts ────────────────────────────── */
+.rivet {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #4a4535, #1a1812);
+  border: 1px solid #3a3728;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.8);
+}
+
+/* ── System status strip ────────────────────── */
+.forge-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--forge-dark);
+  border-bottom: 1px solid var(--border-steel);
+  flex-shrink: 0;
+}
+
+.forge-status-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--green-op);
+  flex: 1;
+}
+
+.led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--green-op);
+  box-shadow: 0 0 5px var(--green-op), 0 0 12px rgba(74, 222, 128, 0.5);
+  animation: led-pulse 2.4s ease-in-out infinite;
+}
+
+.led-amber {
+  background: var(--amber);
+  box-shadow: 0 0 5px var(--amber), 0 0 12px rgba(245, 158, 11, 0.5);
+  animation: led-pulse 3s ease-in-out infinite;
+}
+
+.led-sm {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green-op);
+  box-shadow: 0 0 4px var(--green-op);
+  animation: led-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.led-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+@keyframes led-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+/* ── Section divider ────────────────────────── */
+.forge-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  margin: 10px 0 4px;
+  flex-shrink: 0;
+}
+
+.forge-divider span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.forge-divider::before,
+.forge-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-steel);
+}
+
+/* ── Navigation ─────────────────────────────── */
+.forge-nav {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2px 8px 6px;
+  scrollbar-width: none;
+}
+
+.forge-nav::-webkit-scrollbar { display: none; }
+
+/* ── Nav item ───────────────────────────────── */
+.forge-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 11px;
+  padding: 0 10px 0 14px;
+  min-height: 44px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+  overflow: hidden;
+}
+
+/* Left accent strip */
+.forge-nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px; bottom: 6px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: transparent;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.forge-nav-item:hover {
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.forge-nav-item:hover::before {
+  background: rgba(245, 158, 11, 0.4);
+}
+
+.forge-nav-item.active {
+  background: linear-gradient(90deg, rgba(245,158,11,0.12) 0%, transparent 80%);
+}
+
+.forge-nav-item.active::before {
+  background: var(--amber);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.7), 0 0 16px rgba(245, 158, 11, 0.3);
+}
+
+/* Icon */
+.forge-nav-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--text-mid);
+  transition: color 0.15s;
+}
+
+.forge-nav-item.active .forge-nav-icon,
+.forge-nav-item:hover .forge-nav-icon {
+  color: var(--amber);
+}
+
+/* Text */
+.forge-nav-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.forge-nav-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--text-mid);
+  font-weight: 400;
+  transition: color 0.15s;
+}
+
+.forge-nav-item.active .forge-nav-label {
+  color: var(--amber-bright);
+}
+
+.forge-nav-item:hover .forge-nav-label {
+  color: var(--text-bright);
+}
+
+.forge-nav-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+}
+
+/* Code badge */
+.forge-nav-code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.forge-nav-item.active .forge-nav-code {
+  color: var(--amber-dim);
+}
+
+/* Arrow on active */
+.forge-nav-arrow {
+  flex-shrink: 0;
+  color: var(--amber);
+  margin-left: 2px;
+}
+
+/* ── Gauge panel ────────────────────────────── */
+.forge-gauge-panel {
+  flex-shrink: 0;
+  padding: 0 12px 10px;
+  background: var(--forge-dark);
+  border-top: 1px solid var(--border-steel);
+  border-bottom: 1px solid var(--border-steel);
+}
+
+.forge-gauges {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+/* VU Meter */
+.vu-meter {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.vu-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-faint);
+  width: 26px;
+  flex-shrink: 0;
+}
+
+.vu-segments {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+}
+
+.vu-seg {
+  flex: 1;
+  height: 8px;
+  border-radius: 1px;
+  background: var(--forge-groove);
+  border: 1px solid var(--border-steel);
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+.vu-seg.on {
+  border-color: transparent;
+}
+
+.vu-value {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Clock panel ────────────────────────────── */
+.forge-clock-panel {
+  flex-shrink: 0;
+  padding: 12px 14px 14px;
+  background: var(--forge-plate);
+  border-top: 1px solid var(--border-steel);
+  position: relative;
+}
+
+.forge-clock-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+}
+
+.forge-shift-id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--text-mid);
+  background: var(--forge-groove);
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid var(--border-steel);
+}
+
+.forge-shift-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--green-op);
+}
+
+.forge-clock-display {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.forge-clock-time {
+  font-family: var(--font-brand);
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--amber);
+  text-shadow: 0 0 10px rgba(245,158,11,0.8), 0 0 24px rgba(245,158,11,0.3);
+}
+
+.forge-clock-ampm {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--amber-dim);
+  margin-bottom: 2px;
+}
+
+.forge-clock-date {
+  margin-top: 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--text-faint);
+}
+
+/* ── Decorative rivet positions ─────────────── */
+.r-tl { top: 7px; left: 8px; }
+.r-tr { top: 7px; right: 8px; }
+.r-bl { bottom: 7px; left: 8px; }
+.r-br { bottom: 7px; right: 8px; }
+
+/* ══════════════════════════════════════════════
+   LIGHT THEME OVERRIDES — Sidebar
+   ══════════════════════════════════════════════ */
+
+html[data-theme="light"] .forge-sidebar {
+  box-shadow: var(--sidebar-shadow), inset -1px 0 0 rgba(0,0,0,0.06);
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 3px, rgba(0,0,0,0.015) 3px, rgba(0,0,0,0.015) 4px
+  );
+}
+
+html[data-theme="light"] .forge-sidebar::after {
+  background: repeating-linear-gradient(
+    to bottom, transparent 0, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px
+  );
+}
+
+html[data-theme="light"] .led {
+  background: #15803d;
+  box-shadow: 0 0 5px #15803d, 0 0 12px rgba(21, 128, 61, 0.4);
+}
+
+html[data-theme="light"] .led-amber {
+  background: var(--amber);
+  box-shadow: 0 0 5px var(--amber), 0 0 12px var(--amber-glow);
+}
+
+html[data-theme="light"] .forge-clock-time {
+  text-shadow: 0 0 8px rgba(180, 83, 9, 0.4), 0 0 20px rgba(180, 83, 9, 0.15);
+}
+
+html[data-theme="light"] .forge-brand-name {
+  text-shadow: 0 0 8px rgba(180, 83, 9, 0.35), 0 0 20px rgba(180, 83, 9, 0.12);
+}
+
+html[data-theme="light"] .forge-nav-item.active {
+  background: linear-gradient(90deg, rgba(180,83,9,0.12) 0%, transparent 80%);
+}
+
+html[data-theme="light"] .forge-nav-item.active::before {
+  box-shadow: 0 0 7px rgba(180,83,9,0.5), 0 0 14px rgba(180,83,9,0.2);
+}
+
+html[data-theme="light"] .vu-seg.on {
+  border-color: transparent;
+}
+
+html[data-theme="light"] .forge-factory-icon {
+  filter: drop-shadow(0 0 5px rgba(180, 83, 9, 0.4));
+}

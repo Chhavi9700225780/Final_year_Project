@@ -1,0 +1,1368 @@
+/* =========================================================
+   PRODUCTION.CSS
+   MSME INDUSTRIAL RETRO THEME
+   DARK THEME = ORIGINAL
+   LIGHT THEME = WARM INDUSTRIAL / PARCHMENT
+========================================================= */
+
+
+/* =========================================================
+   THEME COLOR TOKENS
+   These values preserve the existing dark theme.
+========================================================= */
+
+.prod-root {
+  --prod-output: #f59e0b;
+  --prod-target: #a78bfa;
+
+  --prod-good: #4ade80;
+  --prod-warn: #f59e0b;
+  --prod-danger: #f87171;
+
+  --prod-good-soft: rgba(74, 222, 128, 0.06);
+  --prod-warn-soft: rgba(245, 158, 11, 0.06);
+  --prod-danger-soft: rgba(248, 113, 113, 0.06);
+
+  padding: 22px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.prod-header {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+
+  background: var(--forge-plate);
+  border: 1px solid var(--border-steel);
+  border-radius: 2px;
+
+  overflow: hidden;
+  position: relative;
+}
+
+.prod-header::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 4px;
+
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(245, 158, 11, 0.55) 0px,
+    rgba(245, 158, 11, 0.55) 6px,
+    rgba(17, 16, 9, 0.6) 6px,
+    rgba(17, 16, 9, 0.6) 12px
+  );
+}
+
+.prod-header-left {
+  display: flex;
+  align-items: stretch;
+  padding-top: 4px;
+}
+
+.prod-header-accent {
+  width: 5px;
+
+  background: var(--amber);
+
+  box-shadow:
+    2px 0 12px rgba(245, 158, 11, 0.45);
+
+  flex-shrink: 0;
+}
+
+.prod-header-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 4px;
+
+  padding: 14px 20px;
+}
+
+.prod-header-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+
+  letter-spacing: 0.18em;
+
+  color: var(--text-faint);
+
+  text-transform: uppercase;
+}
+
+.prod-header-title {
+  font-family: var(--font-brand);
+  font-size: 22px;
+
+  color: var(--text-bright);
+
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.prod-header-right {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 14px 20px;
+  padding-top: 18px;
+}
+
+
+/* =========================================================
+   REFRESH BUTTON
+========================================================= */
+
+.prod-refresh-btn {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 6px 12px;
+
+  background: var(--forge-lift);
+
+  border: 1px solid var(--border-steel);
+  border-radius: 2px;
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+
+  letter-spacing: 0.14em;
+
+  color: var(--text-mid);
+
+  cursor: pointer;
+
+  transition:
+    color 0.15s,
+    border-color 0.15s,
+    background 0.15s;
+
+  text-transform: uppercase;
+}
+
+.prod-refresh-btn:hover {
+  color: var(--amber);
+
+  border-color: var(--border-amber);
+
+  background: var(--forge-groove);
+}
+
+.prod-refresh-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.prod-refresh-btn svg.spin {
+  animation: spin 0.7s linear infinite;
+}
+
+
+/* =========================================================
+   KPI GAUGE GRID
+========================================================= */
+
+.prod-gauge-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 14px;
+}
+
+.gauge-card {
+  background: var(--forge-plate);
+
+  border: 1px solid var(--border-steel);
+  border-radius: 2px;
+
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+  overflow: hidden;
+
+  transition: border-color 0.18s;
+}
+
+.gauge-card:hover {
+  border-color: var(--border-amber);
+}
+
+.gauge-card-top {
+  height: 3px;
+  width: 100%;
+
+  flex-shrink: 0;
+}
+
+.gauge-svg-wrap {
+  padding: 16px 20px 0;
+
+  display: flex;
+  justify-content: center;
+}
+
+.gauge-svg {
+  width: 100%;
+  max-width: 160px;
+}
+
+.gauge-card-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+
+  letter-spacing: 0.18em;
+
+  color: var(--text-faint);
+
+  text-align: center;
+
+  padding: 6px 16px 14px;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   RECORDS PANEL
+========================================================= */
+
+.prod-panel {
+  background: var(--forge-panel);
+
+  border: 1px solid var(--border-steel);
+  border-radius: 2px;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.prod-panel-header {
+  display: flex;
+  align-items: stretch;
+
+  border-bottom: 1px solid var(--border-steel);
+}
+
+.prod-panel-tab {
+  width: 4px;
+
+  background: var(--amber);
+
+  flex-shrink: 0;
+}
+
+.prod-panel-title-area {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px 16px;
+
+  flex: 1;
+}
+
+.prod-panel-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+
+  letter-spacing: 0.18em;
+
+  color: var(--text-mid);
+
+  text-transform: uppercase;
+}
+
+.prod-count-badge {
+  background: var(--forge-groove);
+
+  border: 1px solid var(--border-steel);
+  border-radius: 1px;
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+
+  letter-spacing: 0.14em;
+
+  color: var(--amber);
+
+  padding: 2px 8px;
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.prod-toolbar {
+  padding: 10px 16px;
+
+  border-bottom: 1px solid var(--border-steel);
+
+  background: var(--forge-dark);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.prod-search {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  background: var(--forge-plate);
+
+  border: 1px solid var(--border-steel);
+  border-radius: 2px;
+
+  padding: 0 12px;
+
+  width: 280px;
+
+  transition: border-color 0.15s;
+}
+
+.prod-search:focus-within {
+  border-color: var(--border-amber);
+}
+
+.prod-search input {
+  background: transparent;
+
+  border: none;
+  outline: none;
+
+  font-family: var(--font-mono);
+  font-size: 10px;
+
+  letter-spacing: 0.08em;
+
+  color: var(--text-mid);
+
+  flex: 1;
+
+  padding: 8px 0;
+}
+
+.prod-search input::placeholder {
+  color: var(--text-faint);
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.prod-table-wrap {
+  overflow-x: auto;
+
+  scrollbar-width: none;
+}
+
+.prod-table-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.prod-table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.prod-table thead th {
+  padding: 10px 16px;
+
+  font-family: var(--font-mono);
+  font-size: 10px;
+
+  letter-spacing: 0.18em;
+
+  color: var(--text-faint);
+
+  text-align: left;
+
+  background: var(--forge-dark);
+
+  border-bottom: 1px solid var(--border-steel);
+
+  white-space: nowrap;
+
+  position: sticky;
+  top: 0;
+
+  z-index: 1;
+
+  text-transform: uppercase;
+}
+
+.prod-table tbody tr {
+  border-bottom: 1px solid var(--border-steel);
+
+  transition: background 0.12s;
+
+  cursor: default;
+}
+
+.prod-table tbody tr:hover {
+  background: rgba(245, 158, 11, 0.04);
+
+  box-shadow:
+    inset 3px 0 0 var(--amber);
+}
+
+.prod-table tbody tr.row-best {
+  background: rgba(74, 222, 128, 0.03);
+}
+
+.prod-table tbody tr.row-best:hover {
+  background: rgba(74, 222, 128, 0.06);
+}
+
+.prod-table td {
+  padding: 11px 16px;
+
+  font-family: var(--font-mono);
+  font-size: 10px;
+
+  color: var(--text-mid);
+
+  white-space: nowrap;
+
+  vertical-align: middle;
+}
+
+
+/* =========================================================
+   PRODUCT CELL
+========================================================= */
+
+.prod-product-cell {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.prod-product-icon {
+  width: 32px;
+  height: 32px;
+
+  border-radius: 2px;
+
+  background: rgba(245, 158, 11, 0.1);
+
+  border: 1px solid rgba(245, 158, 11, 0.25);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--amber);
+
+  flex-shrink: 0;
+}
+
+.prod-product-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+
+  color: var(--text-bright);
+}
+
+.prod-product-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+
+  color: var(--text-faint);
+
+  margin-top: 2px;
+}
+
+.prod-value-cell {
+  font-family: var(--font-mono);
+  font-size: 11px;
+
+  color: var(--text-bright);
+
+  letter-spacing: 0.05em;
+}
+
+
+/* =========================================================
+   EFFICIENCY BAR
+========================================================= */
+
+.eff-bar-wrap {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.eff-mini-bar {
+  width: 50px;
+  height: 5px;
+
+  border-radius: 1px;
+
+  background: var(--forge-groove);
+
+  overflow: hidden;
+
+  position: relative;
+}
+
+.eff-mini-fill {
+  height: 100%;
+
+  border-radius: 1px;
+}
+
+.eff-pct {
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   EFFICIENCY BADGES
+========================================================= */
+
+.eff-badge {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 2px 8px;
+
+  border-radius: 1px;
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+
+  letter-spacing: 0.1em;
+
+  border: 1px solid;
+}
+
+.eff-badge.good {
+  color: var(--prod-good);
+
+  border-color: rgba(74, 222, 128, 0.3);
+
+  background: var(--prod-good-soft);
+}
+
+.eff-badge.warn {
+  color: var(--prod-warn);
+
+  border-color: rgba(245, 158, 11, 0.3);
+
+  background: var(--prod-warn-soft);
+}
+
+.eff-badge.danger {
+  color: var(--prod-danger);
+
+  border-color: rgba(248, 113, 113, 0.3);
+
+  background: var(--prod-danger-soft);
+}
+
+
+/* =========================================================
+   DEFECT BADGE
+========================================================= */
+
+.def-badge {
+  color: var(--red-alert);
+
+  background: rgba(248, 113, 113, 0.08);
+
+  border: 1px solid rgba(248, 113, 113, 0.25);
+
+  font-family: var(--font-mono);
+  font-size: 10px;
+
+  padding: 1px 8px;
+
+  border-radius: 1px;
+}
+
+.def-zero {
+  color: var(--text-faint);
+
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   LOADING / EMPTY STATES
+========================================================= */
+
+.prod-state {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  height: 200px;
+
+  gap: 14px;
+
+  color: var(--text-faint);
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+}
+
+.prod-loading-ring {
+  width: 28px;
+  height: 28px;
+
+  border-radius: 50%;
+
+  border: 2px solid var(--forge-groove);
+
+  border-top-color: var(--amber);
+
+  animation: spin 0.8s linear infinite;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.prod-error {
+  margin: 0 16px 16px;
+
+  padding: 10px 14px;
+
+  background: rgba(248, 113, 113, 0.07);
+
+  border: 1px solid rgba(248, 113, 113, 0.25);
+
+  border-radius: 2px;
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+
+  letter-spacing: 0.12em;
+
+  color: var(--red-alert);
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   LIVE STATUS
+========================================================= */
+
+.prod-live-badge {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+
+  letter-spacing: 0.14em;
+
+  color: var(--text-faint);
+
+  text-transform: uppercase;
+}
+
+.prod-led {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--green-op);
+
+  box-shadow:
+    0 0 6px rgba(74, 222, 128, 0.7);
+
+  animation: led-pulse 2s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   COST
+========================================================= */
+
+.prod-cost-badge {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  font-family: var(--font-mono);
+  font-size: 11px;
+
+  letter-spacing: 0.12em;
+
+  color: var(--text-faint);
+
+  text-transform: uppercase;
+}
+
+.prod-cost-value {
+  color: var(--amber);
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.prod-footer {
+  padding: 12px 16px;
+
+  border-top: 1px solid var(--border-steel);
+
+  background: var(--forge-dark);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prod-footer-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+
+  letter-spacing: 0.2em;
+
+  color: var(--text-faint);
+
+  text-transform: uppercase;
+}
+
+.prod-footer-badges {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.prod-total-badge {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 3px 10px;
+
+  background: var(--forge-groove);
+
+  border: 1px solid var(--border-steel);
+
+  border-radius: 1px;
+
+  font-family: var(--font-mono);
+  font-size: 10px;
+
+  letter-spacing: 0.1em;
+
+  color: var(--text-faint);
+
+  text-transform: uppercase;
+}
+
+.prod-total-badge span {
+  font-size: 10px;
+
+  letter-spacing: 0.05em;
+
+  color: var(--text-bright);
+}
+
+.prod-total-badge span.amber {
+  color: var(--amber);
+}
+
+.prod-total-badge span.red {
+  color: var(--red-alert);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+  .prod-gauge-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .prod-gauge-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prod-search {
+    width: 100%;
+  }
+
+  .prod-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .prod-header {
+    flex-direction: column;
+  }
+
+  .prod-header-right {
+    padding-top: 10px;
+    padding-bottom: 14px;
+  }
+
+  .prod-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .prod-footer-badges {
+    flex-wrap: wrap;
+  }
+}
+
+
+/* =========================================================
+   LIGHT THEME — PRODUCTION
+   WARM INDUSTRIAL / HIGH READABILITY
+   DARK THEME IS NOT TOUCHED
+========================================================= */
+
+html[data-theme="light"] .prod-root {
+  --prod-output: #b56a00;
+  --prod-target: #71539d;
+
+  --prod-good: #287747;
+  --prod-warn: #a65d00;
+  --prod-danger: #b43f3f;
+
+  --prod-good-soft: rgba(40, 119, 71, 0.08);
+  --prod-warn-soft: rgba(166, 93, 0, 0.08);
+  --prod-danger-soft: rgba(180, 63, 63, 0.08);
+
+  /* Backgrounds */
+  --prod-light-bg: #eee8dc;
+  --prod-light-surface: #f8f2e6;
+  --prod-light-panel: #f5efe3;
+  --prod-light-toolbar: #e7dece;
+
+  /* Borders */
+  --prod-light-border: #c6b9a3;
+  --prod-light-border-dark: #aa9c86;
+
+  /* IMPORTANT — HIGH CONTRAST TEXT */
+  --prod-light-text: #171512;
+  --prod-light-text-mid: #39352e;
+  --prod-light-text-soft: #514b41;
+  --prod-light-text-faint: #625b50;
+
+  /* Table track */
+  --prod-light-track: #cfc3af;
+}
+
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+html[data-theme="light"] .prod-root {
+  background: var(--prod-light-bg);
+  color: var(--prod-light-text);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+html[data-theme="light"] .prod-header {
+  background: var(--prod-light-surface);
+  border-color: var(--prod-light-border);
+
+  box-shadow:
+    0 2px 0 rgba(65, 53, 35, 0.06);
+}
+
+html[data-theme="light"] .prod-header::before {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(181, 106, 0, 0.78) 0px,
+    rgba(181, 106, 0, 0.78) 6px,
+    rgba(210, 196, 173, 0.95) 6px,
+    rgba(210, 196, 173, 0.95) 12px
+  );
+}
+
+html[data-theme="light"] .prod-header-accent {
+  background: var(--prod-output);
+  box-shadow: none;
+}
+
+html[data-theme="light"] .prod-header-label {
+  color: var(--prod-light-text-faint);
+}
+
+html[data-theme="light"] .prod-header-title {
+  color: var(--prod-light-text);
+}
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+html[data-theme="light"] .prod-refresh-btn {
+  background: #eee6d7;
+
+  border-color: var(--prod-light-border);
+
+  color: var(--prod-light-text-mid);
+}
+
+html[data-theme="light"] .prod-refresh-btn:hover {
+  background: #dfd4c1;
+
+  border-color: var(--prod-output);
+
+  color: var(--prod-output);
+}
+
+
+/* =========================================================
+   LIVE STATUS
+========================================================= */
+
+html[data-theme="light"] .prod-live-badge {
+  color: var(--prod-light-text-soft);
+}
+
+html[data-theme="light"] .prod-led {
+  background: var(--prod-good);
+
+  box-shadow:
+    0 0 4px rgba(40, 119, 71, 0.35);
+}
+
+
+/* =========================================================
+   GAUGE CARDS
+========================================================= */
+
+html[data-theme="light"] .gauge-card {
+  background: var(--prod-light-surface);
+
+  border-color: var(--prod-light-border);
+
+  box-shadow:
+    0 2px 0 rgba(65, 53, 35, 0.05);
+}
+
+html[data-theme="light"] .gauge-card:hover {
+  border-color: #b68138;
+}
+
+html[data-theme="light"] .gauge-card-label {
+  color: var(--prod-light-text-faint);
+}
+
+
+/* Remove neon SVG glow in light mode */
+
+html[data-theme="light"] .gauge-svg path,
+html[data-theme="light"] .gauge-svg text {
+  filter: none !important;
+}
+
+
+/* =========================================================
+   RECORDS PANEL
+========================================================= */
+
+html[data-theme="light"] .prod-panel {
+  background: var(--prod-light-panel);
+
+  border-color: var(--prod-light-border);
+
+  box-shadow:
+    0 2px 0 rgba(65, 53, 35, 0.05);
+}
+
+html[data-theme="light"] .prod-panel-header {
+  border-bottom-color: var(--prod-light-border);
+}
+
+html[data-theme="light"] .prod-panel-tab {
+  background: var(--prod-output);
+}
+
+html[data-theme="light"] .prod-panel-title {
+  color: var(--prod-light-text-mid);
+}
+
+html[data-theme="light"] .prod-count-badge {
+  background: #e6dccb;
+
+  border-color: var(--prod-light-border);
+
+  color: var(--prod-output);
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+html[data-theme="light"] .prod-toolbar {
+  background: var(--prod-light-toolbar);
+
+  border-bottom-color: var(--prod-light-border);
+}
+
+html[data-theme="light"] .prod-search {
+  background: #faf6ed;
+
+  border-color: var(--prod-light-border);
+}
+
+html[data-theme="light"] .prod-search:focus-within {
+  border-color: var(--prod-output);
+
+  box-shadow:
+    0 0 0 2px rgba(181, 106, 0, 0.08);
+}
+
+html[data-theme="light"] .prod-search input {
+  color: var(--prod-light-text);
+}
+
+html[data-theme="light"] .prod-search input::placeholder {
+  color: var(--prod-light-text-faint);
+}
+
+html[data-theme="light"] .prod-cost-badge {
+  color: var(--prod-light-text-soft);
+}
+
+html[data-theme="light"] .prod-cost-value {
+  color: var(--prod-output);
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   Stronger contrast than previous version
+========================================================= */
+
+html[data-theme="light"] .prod-table thead th {
+  background: #e3d9c8;
+
+  color: #39342c;
+
+  border-bottom-color: var(--prod-light-border);
+
+  font-size: 10px;
+  font-weight: 600;
+
+  letter-spacing: 0.18em;
+}
+
+
+/* =========================================================
+   TABLE ROWS
+========================================================= */
+
+html[data-theme="light"] .prod-table tbody tr {
+  border-bottom-color: #c8bba5;
+}
+
+html[data-theme="light"] .prod-table tbody tr:hover {
+  background: rgba(181, 106, 0, 0.055);
+
+  box-shadow:
+    inset 3px 0 0 var(--prod-output);
+}
+
+html[data-theme="light"] .prod-table tbody tr.row-best {
+  background: rgba(40, 119, 71, 0.055);
+}
+
+html[data-theme="light"] .prod-table tbody tr.row-best:hover {
+  background: rgba(40, 119, 71, 0.09);
+
+  box-shadow:
+    inset 3px 0 0 var(--prod-good);
+}
+
+
+/* =========================================================
+   TABLE TEXT
+   THIS IS THE IMPORTANT FIX
+========================================================= */
+
+html[data-theme="light"] .prod-table td {
+  color: var(--prod-light-text-mid);
+
+  font-size: 11px;
+}
+
+
+/* Product name */
+
+html[data-theme="light"] .prod-product-name {
+  color: #171512;
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+
+/* Product ID */
+
+html[data-theme="light"] .prod-product-id {
+  color: var(--prod-light-text-soft);
+
+  font-size: 10px;
+}
+
+
+/* Number / secondary cells */
+
+html[data-theme="light"] .prod-table td[style*="text-faint"] {
+  color: var(--prod-light-text-faint) !important;
+}
+
+
+/* Planned / Actual / Cost */
+
+html[data-theme="light"] .prod-value-cell {
+  color: #201d18;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   PRODUCT ICON
+========================================================= */
+
+html[data-theme="light"] .prod-product-icon {
+  background: rgba(181, 106, 0, 0.08);
+
+  border-color: rgba(181, 106, 0, 0.30);
+
+  color: var(--prod-output);
+}
+
+
+/* =========================================================
+   EFFICIENCY BAR
+========================================================= */
+
+html[data-theme="light"] .eff-mini-bar {
+  background: var(--prod-light-track);
+}
+
+
+/* =========================================================
+   EFFICIENCY BADGES
+========================================================= */
+
+html[data-theme="light"] .eff-badge {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+html[data-theme="light"] .eff-badge.good {
+  color: var(--prod-good);
+
+  border-color: rgba(40, 119, 71, 0.30);
+
+  background: var(--prod-good-soft);
+}
+
+html[data-theme="light"] .eff-badge.warn {
+  color: var(--prod-warn);
+
+  border-color: rgba(166, 93, 0, 0.32);
+
+  background: var(--prod-warn-soft);
+}
+
+html[data-theme="light"] .eff-badge.danger {
+  color: var(--prod-danger);
+
+  border-color: rgba(180, 63, 63, 0.30);
+
+  background: var(--prod-danger-soft);
+}
+
+
+/* =========================================================
+   DEFECT BADGE
+========================================================= */
+
+html[data-theme="light"] .def-badge {
+  color: var(--prod-danger);
+
+  background: rgba(180, 63, 63, 0.07);
+
+  border-color: rgba(180, 63, 63, 0.28);
+}
+
+html[data-theme="light"] .def-zero {
+  color: var(--prod-light-text-faint);
+}
+
+
+/* =========================================================
+   STATUS / COST
+========================================================= */
+
+html[data-theme="light"] .prod-cost-value {
+  color: #a85f00 !important;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+html[data-theme="light"] .prod-error {
+  background: rgba(180, 63, 63, 0.07);
+
+  border-color: rgba(180, 63, 63, 0.28);
+
+  color: var(--prod-danger);
+}
+
+
+/* =========================================================
+   LOADING / EMPTY
+========================================================= */
+
+html[data-theme="light"] .prod-state {
+  color: var(--prod-light-text-mid);
+}
+
+html[data-theme="light"] .prod-loading-ring {
+  border-color: var(--prod-light-track);
+
+  border-top-color: var(--prod-output);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+html[data-theme="light"] .prod-footer {
+  background: var(--prod-light-toolbar);
+
+  border-top-color: var(--prod-light-border);
+}
+
+html[data-theme="light"] .prod-footer-label {
+  color: var(--prod-light-text-faint);
+}
+
+html[data-theme="light"] .prod-total-badge {
+  background: #e6dccb;
+
+  border-color: var(--prod-light-border);
+
+  color: var(--prod-light-text-mid);
+}
+
+html[data-theme="light"] .prod-total-badge span {
+  color: #201d18;
+}
+
+html[data-theme="light"] .prod-total-badge span.amber {
+  color: var(--prod-output);
+}
+
+html[data-theme="light"] .prod-total-badge span.red {
+  color: var(--prod-danger);
+}
+
+
+/* =========================================================
+   TOP BADGE
+========================================================= */
+
+html[data-theme="light"] .prod-top-badge {
+  color: var(--prod-good);
+
+  border-color: rgba(40, 119, 71, 0.30);
+}
+
+
+/* =========================================================
+   ACTUAL VALUE — LIGHT MODE
+========================================================= */
+
+html[data-theme="light"] .prod-table td[style*="var(--prod-good)"] {
+  color: var(--prod-good) !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE SVG TEXT
+========================================================= */
+
+html[data-theme="light"] .gauge-svg text {
+  text-rendering: geometricPrecision;
+}
+
+
+/* =========================================================
+   END LIGHT THEME
+========================================================= */

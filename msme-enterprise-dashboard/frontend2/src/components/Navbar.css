@@ -1,0 +1,472 @@
+
+/* ══════════════════════════════════════════════
+   FORGE NAVBAR — Industrial Retro Control Bar
+   ══════════════════════════════════════════════ */
+
+.forge-navbar {
+  position: fixed;
+  top: 0;
+  left: 262px;
+  right: 0;
+  height: 62px;
+  display: flex;
+  align-items: stretch;
+  background: var(--forge-panel);
+  border-bottom: 1px solid var(--border-steel);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+  z-index: 900;
+  overflow: visible; /* bulb hangs below */
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.05) 3px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+}
+
+/* ── Bottom warning stripe ──────────────────── */
+.navbar-warning-stripe {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--amber) 0px,
+    var(--amber) 5px,
+    var(--forge-dark) 5px,
+    var(--forge-dark) 10px
+  );
+  opacity: 0.55;
+}
+
+/* ── Left section ───────────────────────────── */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 4px; /* align above warning stripe */
+}
+
+.navbar-stripe-v {
+  width: 5px;
+  align-self: stretch;
+  flex-shrink: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    var(--amber) 0px,
+    var(--amber) 5px,
+    var(--forge-dark) 5px,
+    var(--forge-dark) 10px
+  );
+  opacity: 0.6;
+}
+
+.navbar-breadcrumb {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  gap: 2px;
+}
+
+.navbar-crumb-path {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--text-faint);
+}
+
+.navbar-crumb-sep {
+  color: var(--amber-dim);
+  font-size: 10px;
+}
+
+.navbar-crumb-root {
+  color: var(--text-faint);
+}
+
+.navbar-crumb-active {
+  color: var(--amber);
+}
+
+.navbar-page-title {
+  font-family: var(--font-brand);
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: var(--text-bright);
+  text-shadow: 0 0 8px rgba(232, 227, 208, 0.2);
+}
+
+/* ── Center: hanging bulb ───────────────────── */
+.navbar-center {
+  position: relative;
+  width: 140px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: visible;
+}
+
+.bulb-anchor {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: top center;
+  animation: bulb-swing 7s ease-in-out infinite;
+}
+
+/* Ceiling mount bracket */
+.bulb-mount {
+  width: 22px;
+  height: 7px;
+  background: linear-gradient(to bottom, #3a3520, #2a2518);
+  border: 1px solid #4a4530;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4);
+  flex-shrink: 0;
+}
+
+/* Wire / cord */
+.bulb-wire {
+  width: 2px;
+  height: 85px;
+  background: linear-gradient(to bottom, #6a5f30, #4a4020 70%, #8a7040);
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Thin filament wire texture */
+.bulb-wire::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255,220,100,0.2);
+}
+
+/* Bulb socket */
+.bulb-socket {
+  width: 18px;
+  height: 10px;
+  background: linear-gradient(to bottom, #3a3520, #252215);
+  border: 1px solid #4a4530;
+  border-radius: 2px;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.bulb-socket::before,
+.bulb-socket::after {
+  content: '';
+  position: absolute;
+  left: 2px; right: 2px;
+  height: 1px;
+  background: #5a5030;
+}
+
+.bulb-socket::before { top: 3px; }
+.bulb-socket::after  { top: 6px; }
+
+/* Bulb glass container (glow + SVG together) */
+
+.bulb-glass-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+   transform: rotate(180deg);
+  animation: bulb-flicker 9s ease-in-out infinite;
+}
+
+/* Ambient glow halo */
+.bulb-halo {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(245, 158, 11, 0.55) 0%,
+    rgba(245, 158, 11, 0.20) 40%,
+    transparent 75%
+  );
+  filter: blur(14px);
+  animation: glow-breathe 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Light cone below */
+.bulb-cone {
+  width: 200px;
+  height: 70px;
+  background: linear-gradient(to bottom, rgba(245, 158, 11, 0.1), transparent);
+  clip-path: polygon(37% 0%, 63% 0%, 100% 100%, 0% 100%);
+  animation: glow-breathe 2.8s ease-in-out infinite;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+/* ── Animations ─────────────────────────────── */
+@keyframes bulb-swing {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(1.8deg); }
+  30%  { transform: rotate(-1.2deg); }
+  45%  { transform: rotate(0.9deg); }
+  60%  { transform: rotate(-0.6deg); }
+  75%  { transform: rotate(0.3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes bulb-flicker {
+  0%, 87%, 89%, 91%, 100% { opacity: 1; filter: brightness(1); }
+  88%  { opacity: 0.65; filter: brightness(0.7); }
+  90%  { opacity: 0.9;  filter: brightness(0.9); }
+}
+
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.18); }
+}
+
+/* ── Right section ──────────────────────────── */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  justify-content: flex-end;
+  padding: 0 14px 4px;
+}
+
+/* Machine ID badge */
+.navbar-machine-id {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--forge-plate);
+  border: 1px solid var(--border-steel);
+  border-radius: 3px;
+}
+
+.navbar-machine-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
+}
+
+.navbar-machine-val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+}
+
+/* Divider between right items */
+.navbar-vdiv {
+  width: 1px;
+  height: 28px;
+  background: var(--border-steel);
+  margin: 0 14px;
+}
+
+/* Icon buttons */
+.navbar-icon-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.navbar-icon-btn:hover {
+  background: var(--forge-lift);
+  border-color: var(--border-steel);
+  color: var(--amber);
+}
+
+.notif-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red-alert);
+  box-shadow: 0 0 5px rgba(248, 113, 113, 0.8);
+  border: 1px solid var(--forge-panel);
+}
+
+/* User badge */
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 10px;
+  background: var(--forge-plate);
+  border: 1px solid var(--border-steel);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.navbar-user:hover {
+  background: var(--forge-lift);
+  border-color: var(--border-amber);
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--amber-dim), #4a3010);
+  border: 1.5px solid var(--amber-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--amber);
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-role {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  color: var(--text-bright);
+}
+
+.user-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+/* ── Rivet bolts ────────────────────────────── */
+.navbar-rivet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #4a4535, #1a1812);
+  border: 1px solid #3a3728;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.nr-tl { top: 8px; left: 8px; }
+.nr-tr { top: 8px; right: 8px; }
+.nr-bl { bottom: 8px; left: 8px; }
+.nr-br { bottom: 8px; right: 8px; }
+
+/* ══════════════════════════════════════════════
+   LIGHT THEME OVERRIDES — Navbar
+   ══════════════════════════════════════════════ */
+
+html[data-theme="light"] .forge-navbar {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1), inset 0 -1px 0 rgba(0,0,0,0.06);
+}
+
+html[data-theme="light"] .navbar-crumb-active {
+  color: var(--amber);
+}
+
+html[data-theme="light"] .navbar-page-title {
+  text-shadow: none;
+  color: var(--text-bright);
+}
+
+html[data-theme="light"] .user-avatar {
+  background: rgba(180,83,9,0.12);
+  border-color: rgba(180,83,9,0.3);
+  color: var(--amber);
+}
+
+html[data-theme="light"] .notif-dot {
+  background: var(--red-alert);
+  box-shadow: 0 0 4px var(--red-alert);
+}
+
+/* Bulb in light mode — unlit / day state */
+html[data-theme="light"] .bulb-halo {
+  display: none;
+}
+
+html[data-theme="light"] .bulb-cone {
+  display: none;
+}
+
+html[data-theme="light"] .bulb-socket {
+  background: linear-gradient(180deg, #8a7a65 0%, #6b5c48 100%);
+  border-color: #c4a87a;
+  box-shadow: none;
+}
+
+/* Bulb click affordance */
+.bulb-anchor {
+  cursor: pointer;
+}
+
+.bulb-anchor:hover .bulb-glass-wrap {
+  filter: brightness(1.15);
+}
+
+/* ── Bulb mode tip label ────────────────────── */
+.bulb-mode-tip {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.bulb-anchor:hover .bulb-mode-tip {
+  opacity: 1;
+}
+
+.bulb-anchor {
+  cursor: pointer;
+  position: relative;
+}
+
