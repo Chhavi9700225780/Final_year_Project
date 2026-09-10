@@ -171,6 +171,7 @@ export const getAlerts = async (req, res) => {
       count: alerts.length,
       data: alerts,
     });
+    
   } catch (error) {
     return res.status(500).json({
       success: false,
