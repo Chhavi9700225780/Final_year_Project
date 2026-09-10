@@ -1,0 +1,11 @@
+material_id,material_name,supplier,current_stock,minimum_stock,unit_cost,last_updated
+RM001,Steel Sheet,Tata Steel,420,300,185.5,2026-08-01
+RM002,Copper Wire,Polycab,180,200,620.0,2026-08-02
+RM003,Aluminium Rod,Hindalco,260,180,340.75,2026-08-03
+RM004,Rubber Seal,PolymerTech,75,100,48.5,2026-08-04
+RM005,Industrial Bolt,FastenPro,900,700,6.25,2026-08-05
+RM006,Bearing,SKF India,120,150,425.0,2026-08-06
+RM007,PVC Insulation,Finolex,310,250,95.0,2026-08-07
+RM008,Brass Connector,MetalWorks,140,120,72.8,2026-08-08
+RM009,Electrical Relay,Schneider,65,80,215.0,2026-08-09
+RM010,Packaging Box,PackRight,520,400,18.5,2026-08-10

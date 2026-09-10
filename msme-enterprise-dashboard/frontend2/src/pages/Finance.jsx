@@ -723,7 +723,7 @@ import { useEffect, useMemo, useState } from "react"
 import { getFinanceTransactions } from "../services/api"
 import "./styles/Finance.css"
 
-const COMPANY_ID = "68a123456789abcdef123456"
+//const COMPANY_ID = "68a123456789abcdef123456"
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(value || 0)
@@ -791,7 +791,7 @@ export default function Finance() {
     try {
       setLoading(true)
       setError("")
-      const response = await getFinanceTransactions(COMPANY_ID)
+      const response = await getFinanceTransactions()
       console.log("Finance API:", response.data)
       const responseData = response.data?.data
       let financeData = []
@@ -824,7 +824,7 @@ export default function Finance() {
     return records.filter((item) => {
       const matchesSearch =
         !query ||
-        item.department?.toLowerCase().includes(query) ||
+        item.category?.toLowerCase().includes(query) ||
         item.description?.toLowerCase().includes(query) ||
         item.transactionType?.toLowerCase().includes(query)
       const matchesFilter = filter === "all" || item.transactionType === filter
@@ -958,7 +958,7 @@ export default function Finance() {
                   const isRevenue = item.transactionType === "revenue"
                   return (
                     <tr key={item._id} className={isRevenue ? "fin-row-rev" : "fin-row-exp"}>
-                      <td><strong className="fin-dept">{item.department || "Unknown"}</strong></td>
+                      <td><strong className="fin-dept">{item.category || "Unknown"}</strong></td>
                       <td>
                         <span className={`fin-type-badge ${isRevenue ? "type-rev" : "type-exp"}`}>
                           {isRevenue ? "▲" : "▼"} {isRevenue ? "Revenue" : "Expense"}

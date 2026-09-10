@@ -8,17 +8,38 @@ import {
   deleteFinance,
 } from "../controllers/financeController.js";
 
+import { protect } from "../middleware/authMiddleware.js";
+import { authorize } from "../middleware/roleMiddleware.js";
+
 const router = express.Router();
 
 router
   .route("/")
-  .post(createFinance)
-  .get(getFinances);
+  .post(
+    protect,
+    authorize("admin", "manager"),
+    createFinance
+  )
+  .get(
+    protect,
+    getFinances
+  );
 
 router
   .route("/:id")
-  .get(getFinance)
-  .put(updateFinance)
-  .delete(deleteFinance);
+  .get(
+    protect,
+    getFinance
+  )
+  .put(
+    protect,
+    authorize("admin", "manager"),
+    updateFinance
+  )
+  .delete(
+    protect,
+    authorize("admin"),
+    deleteFinance
+  );
 
 export default router;

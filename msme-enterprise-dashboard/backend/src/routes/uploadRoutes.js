@@ -6,14 +6,15 @@ import {
   uploadDataset,
 } from "../controllers/uploadController.js";
 
-const router = express.Router();
+import { protect } from "../middleware/authMiddleware.js";
+import { authorize } from "../middleware/roleMiddleware.js";
 
-// ==========================================
-// Upload Dataset
-// ==========================================
+const router = express.Router();
 
 router.post(
   "/",
+  protect,
+  authorize("admin", "manager", "operator"),
   upload.single("file"),
   uploadDataset
 );

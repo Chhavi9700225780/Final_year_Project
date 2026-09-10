@@ -2,69 +2,123 @@ import Alert from "../models/Alert.js";
 import RawMaterial from "../models/RawMaterial.js";
 import ProductionRecord from "../models/ProductionRecord.js";
 
+
+// ==========================================
+// GENERATE ALERTS
+// ==========================================
+
 export const generateAlerts = async (req, res) => {
   try {
-    const { companyId } = req.body;
+    const companyId = req.user.companyId;
 
     if (!companyId) {
       return res.status(400).json({
         success: false,
-        message: "companyId is required",
+        message:
+          "User is not associated with a company",
       });
     }
 
     const generatedAlerts = [];
 
-    const materials = await RawMaterial.find({ companyId });
+    // --------------------------------------
+    // RAW MATERIAL ALERTS
+    // --------------------------------------
+
+    const materials =
+      await RawMaterial.find({
+        companyId,
+      });
 
     for (const material of materials) {
-      if (material.currentStock < material.minimumStock) {
-        const existingAlert = await Alert.findOne({
-          companyId,
-          type: "low_stock",
-          title: `Low stock: ${material.materialName}`,
-          isResolved: false,
-        });
+      if (
+        material.currentStock <
+        material.minimumStock
+      ) {
+        const existingAlert =
+          await Alert.findOne({
+            companyId,
+
+            type: "low_stock",
+
+            title:
+              `Low stock: ${material.materialName}`,
+
+            isResolved: false,
+          });
 
         if (!existingAlert) {
-          const alert = await Alert.create({
-            companyId,
-            type: "low_stock",
-            severity: "high",
-            title: `Low stock: ${material.materialName}`,
-            message: `${material.materialName} is below its minimum stock threshold.`,
-            sourceDepartment: "raw-materials",
-          });
+          const alert =
+            await Alert.create({
+              companyId,
+
+              type: "low_stock",
+
+              severity: "high",
+
+              title:
+                `Low stock: ${material.materialName}`,
+
+              message:
+                `${material.materialName} is below its minimum stock threshold.`,
+
+              sourceDepartment:
+                "raw-materials",
+            });
 
           generatedAlerts.push(alert);
         }
       }
     }
 
-    const productionRecords = await ProductionRecord.find({ companyId });
+    // --------------------------------------
+    // PRODUCTION ALERTS
+    // --------------------------------------
+
+    const productionRecords =
+      await ProductionRecord.find({
+        companyId,
+      });
 
     for (const record of productionRecords) {
       if (record.actualQuantity > 0) {
         const defectRate =
-          record.defectiveQuantity / record.actualQuantity;
+          record.defectiveQuantity /
+          record.actualQuantity;
 
         if (defectRate > 0.05) {
-          const existingAlert = await Alert.findOne({
-            companyId,
-            type: "high_defect_rate",
-            title: `High defect rate: ${record.productName}`,
-            isResolved: false,
-          });
+          const existingAlert =
+            await Alert.findOne({
+              companyId,
+
+              type:
+                "high_defect_rate",
+
+              title:
+                `High defect rate: ${record.productName}`,
+
+              isResolved: false,
+            });
 
           if (!existingAlert) {
-            const alert = await Alert.create({
-              companyId,
-              type: "high_defect_rate",
-              severity: "high",
-              title: `High defect rate: ${record.productName}`,
-              message: `Defect rate exceeded 5% for ${record.productName}.`,
-              sourceDepartment: "production",
-            });
+            const alert =
+              await Alert.create({
+                companyId,
+
+                type:
+                  "high_defect_rate",
+
+                severity: "high",
+
+                title:
+                  `High defect rate: ${record.productName}`,
+
+                message:
+                  `Defect rate exceeded 5% for ${record.productName}.`,
+
+                sourceDepartment:
+                  "production",
+              });
 
             generatedAlerts.push(alert);
           }
@@ -74,25 +128,43 @@ export const generateAlerts = async (req, res) => {
 
     return res.json({
       success: true,
-      generatedCount: generatedAlerts.length,
+      generatedCount:
+        generatedAlerts.length,
       data: generatedAlerts,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Alert generation failed",
+      message:
+        "Alert generation failed",
       error: error.message,
     });
   }
 };
 
+
+// ==========================================
+// GET ALERTS
+// ==========================================
+
 export const getAlerts = async (req, res) => {
   try {
-    const { companyId } = req.query;
+    const companyId = req.user.companyId;
 
-    const alerts = await Alert.find({ companyId }).sort({
-      createdAt: -1,
-    });
+    if (!companyId) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "User is not associated with a company",
+      });
+    }
+
+    const alerts =
+      await Alert.find({
+        companyId,
+      }).sort({
+        createdAt: -1,
+      });
 
     return res.json({
       success: true,

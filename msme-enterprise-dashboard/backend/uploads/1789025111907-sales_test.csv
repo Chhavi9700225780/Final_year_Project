@@ -1,0 +1,13 @@
+sale_id,order_id,customer,product_id,product,quantity,amountINR,customer_region,payment_method,status,date
+S001,ORD1001,Aarav Traders,P2001,Hydraulic Pump,12,180000,North India,UPI,Completed,08/01/2026
+S002,ORD1002,Sharma Industries,P2002,Industrial Motor,8,240000,Delhi NCR,Bank Transfer,Completed,10/01/2026
+S003,ORD1003,Mehta Engineering,P2003,Control Panel,15,225000,West India,UPI,Completed,14/01/2026
+S004,ORD1004,Verma Manufacturing,P2001,Hydraulic Pump,6,90000,South India,Cash,Completed,18/01/2026
+S005,ORD1005,Singh Enterprises,P2004,Gear Assembly,10,150000,North India,Bank Transfer,Completed,22/01/2026
+S006,ORD1006,Patel Machines,P2002,Industrial Motor,5,150000,West India,UPI,Completed,25/01/2026
+S007,ORD1007,Kumar Automation,P2003,Control Panel,9,135000,East India,Bank Transfer,Completed,29/01/2026
+S008,ORD1008,Gupta Industries,P2005,Conveyor Unit,7,140000,Delhi NCR,UPI,Completed,02/02/2026
+S009,ORD1009,Rana Engineering,P2004,Gear Assembly,4,60000,East India,Cash,Completed,06/02/2026
+S010,ORD1010,Kapoor Industries,P2001,Hydraulic Pump,11,165000,South India,Bank Transfer,Completed,10/02/2026
+S011,ORD1011,Nair Industrial Works,P2005,Conveyor Unit,6,120000,South India,UPI,Completed,15/02/2026
+S012,ORD1012,Das Engineering,P2003,Control Panel,8,120000,East India,Bank Transfer,Completed,20/02/2026

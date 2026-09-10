@@ -1,117 +1,179 @@
-import pandas as pd
+from schema_detector import (
+    detect_mapping,
+    apply_mapping
+)
 
 
-REQUIRED_COLUMNS = {
+# ============================================================
+# REQUIRED FIELDS
+# ============================================================
+
+REQUIRED_FIELDS = {
 
     "production": [
-        "company_id",
-        "product_id",
-        "product_name",
-        "planned_quantity",
-        "actual_quantity",
-        "production_date",
+        "productName",
+        "plannedQuantity",
+        "actualQuantity",
+        "productionDate",
     ],
 
     "inventory": [
-        "company_id",
-        "product_id",
-        "product_name",
-        "opening_stock",
-        "closing_stock",
-        "record_date",
+        "productId",
+        "productName",
+        "openingStock",
+        "closingStock",
+        "minimumStock",
+        "recordDate",
     ],
 
     "raw-materials": [
-        "company_id",
-        "material_id",
-        "material_name",
+        "materialId",
+        "materialName",
         "supplier",
-        "current_stock",
-        "minimum_stock",
-        "unit_cost",
+        "currentStock",
+        "minimumStock",
+        "unitCost",
+        "lastUpdated",
     ],
 
     "finance": [
-        "company_id",
-        "department",
-        "transaction_type",
+        "transactionId",
+        "transactionType",
         "amount",
-        "transaction_date",
+        "transactionDate",
     ],
 
     "sales": [
-        "company_id",
-        "product_id",
-        "product_name",
+        "saleId",
+        "orderId",
+        "customerName",
+        "productName",
         "quantity",
         "revenue",
-        "sale_date",
+        "saleDate",
     ],
 }
 
 
-def validate_data(df, department):
+# ============================================================
+# VALIDATE DATA
+# ============================================================
+
+def validate_data(
+    df,
+    department
+):
 
     print("\nStarting Data Validation...")
 
-    # ==========================================
-    # Standardize column names
-    # ==========================================
 
-    df.columns = (
-        df.columns
-        .str.strip()
-        .str.lower()
-        .str.replace(" ", "_")
-    )
+    # ========================================================
+    # CHECK DEPARTMENT
+    # ========================================================
 
-    # ==========================================
-    # Check department
-    # ==========================================
-
-    if department not in REQUIRED_COLUMNS:
+    if department not in REQUIRED_FIELDS:
 
         raise ValueError(
             f"Unknown department: {department}"
         )
 
-    required = REQUIRED_COLUMNS[department]
 
-    # ==========================================
-    # Check required columns
-    # ==========================================
+    # ========================================================
+    # DETECT COLUMN MAPPING
+    # ========================================================
 
-    missing_columns = [
-        column
-        for column in required
-        if column not in df.columns
+    original_columns = list(
+        df.columns
+    )
+
+    mapping = detect_mapping(
+        original_columns,
+        department
+    )
+
+
+    print("\nDetected Column Mapping:")
+
+    for item in mapping:
+
+        if item["matched"]:
+
+            print(
+                f"  {item['uploadedColumn']} "
+                f"-> "
+                f"{item['forgeField']}"
+            )
+
+        else:
+
+            print(
+                f"  {item['uploadedColumn']} "
+                f"-> UNMAPPED"
+            )
+
+
+    # ========================================================
+    # APPLY MAPPING
+    # ========================================================
+
+    df = apply_mapping(
+        df,
+        mapping
+    )
+
+
+    # ========================================================
+    # REQUIRED FIELDS
+    # ========================================================
+
+    required = REQUIRED_FIELDS[
+        department
     ]
 
-    if missing_columns:
+    missing_fields = [
+
+        field
+
+        for field in required
+
+        if field not in df.columns
+
+    ]
+
+
+    if missing_fields:
 
         raise ValueError(
-            "Missing required columns: "
-            + ", ".join(missing_columns)
+            "Unable to identify required "
+            "dataset fields: "
+            + ", ".join(missing_fields)
         )
 
-    print("Required columns validated.")
 
-    # ==========================================
-    # Remove completely empty rows
-    # ==========================================
+    print(
+        "\nRequired fields successfully identified."
+    )
+
+
+    # ========================================================
+    # REMOVE EMPTY ROWS
+    # ========================================================
 
     before = len(df)
 
-    df = df.dropna(how="all")
+    df = df.dropna(
+        how="all"
+    )
 
     print(
         f"Empty rows removed: "
         f"{before - len(df)}"
     )
 
-    # ==========================================
-    # Remove duplicate rows
-    # ==========================================
+
+    # ========================================================
+    # REMOVE DUPLICATES
+    # ========================================================
 
     duplicates = df.duplicated().sum()
 
@@ -124,9 +186,10 @@ def validate_data(df, department):
 
         df = df.drop_duplicates()
 
-    # ==========================================
-    # Remove spaces from text
-    # ==========================================
+
+    # ========================================================
+    # CLEAN TEXT
+    # ========================================================
 
     for column in df.columns:
 
@@ -138,32 +201,53 @@ def validate_data(df, department):
                 .str.strip()
             )
 
-    # ==========================================
-    # Validate transaction type
-    # ==========================================
+
+    # ========================================================
+    # FINANCE VALIDATION
+    # ========================================================
 
     if department == "finance":
 
-        valid_types = [
-            "revenue",
-            "expense"
-        ]
-
-        df["transaction_type"] = (
-            df["transaction_type"]
+        df["transactionType"] = (
+            df["transactionType"]
+            .astype(str)
+            .str.strip()
             .str.lower()
         )
 
+        valid_types = [
+            "revenue",
+            "expense",
+        ]
+
         invalid = ~df[
-            "transaction_type"
+            "transactionType"
         ].isin(valid_types)
+
 
         if invalid.any():
 
-            raise ValueError(
-                "Finance transactionType must be "
-                "'revenue' or 'expense'."
+            invalid_values = (
+                df.loc[
+                    invalid,
+                    "transactionType"
+                ]
+                .unique()
+                .tolist()
             )
+
+            raise ValueError(
+                "Invalid finance transaction type(s): "
+                + ", ".join(
+                    map(str, invalid_values)
+                )
+                + ". Allowed values: revenue, expense."
+            )
+
+
+    # ========================================================
+    # FINAL RESULT
+    # ========================================================
 
     print(
         f"Rows after validation: {len(df)}"

@@ -1,16 +1,27 @@
 from pymongo import MongoClient
 from bson import ObjectId
+from datetime import datetime
 
-from config import MONGO_URI, DATABASE_NAME
+import pandas as pd
+import numpy as np
+
+from config import (
+    MONGO_URI,
+    DATABASE_NAME
+)
 
 
 # ==========================================
 # MongoDB Connection
 # ==========================================
 
-client = MongoClient(MONGO_URI)
+client = MongoClient(
+    MONGO_URI
+)
 
-db = client[DATABASE_NAME]
+db = client[
+    DATABASE_NAME
+]
 
 
 # ==========================================
@@ -19,149 +30,267 @@ db = client[DATABASE_NAME]
 
 COLLECTIONS = {
 
-    "production": "productionrecords",
+    "production":
+        "productionrecords",
 
-    "inventory": "inventoryrecords",
+    "inventory":
+        "inventoryrecords",
 
-    "raw-materials": "rawmaterials",
+    "raw-materials":
+        "rawmaterials",
 
-    "finance": "financetransactions",
+    "finance":
+        "financetransactions",
 
-    "sales": "salesrecords"
+    "sales":
+        "salesrecords",
 
 }
 
 
 # ==========================================
-# Load Data
+# LOAD DATA
 # ==========================================
 
 def load_data(
     dataframe,
     department,
-    upload_job_id=None
+    upload_job_id=None,
+    company_id=None
 ):
 
-    print("\nConnecting to MongoDB...")
+    print(
+        "\nConnecting to MongoDB..."
+    )
+
+
+    # ==========================================
+    # VALIDATE DEPARTMENT
+    # ==========================================
 
     if department not in COLLECTIONS:
 
-        raise Exception(
+        raise ValueError(
             f"Invalid department: {department}"
         )
 
-    collection_name = COLLECTIONS[department]
-
-    collection = db[collection_name]
 
     # ==========================================
-    # Check Data
+    # VALIDATE COMPANY
+    # ==========================================
+
+    if not company_id:
+
+        raise ValueError(
+            "company_id is required."
+        )
+
+
+    # ==========================================
+    # COLLECTION
+    # ==========================================
+
+    collection_name = (
+        COLLECTIONS[department]
+    )
+
+    collection = db[
+        collection_name
+    ]
+
+
+    # ==========================================
+    # CHECK DATA
     # ==========================================
 
     if dataframe.empty:
 
-        print("No records found.")
+        print(
+            "No records found."
+        )
 
         return 0
 
+
     # ==========================================
-    # Convert DataFrame to records
+    # CONVERT DATAFRAME
     # ==========================================
 
     records = dataframe.to_dict(
         orient="records"
     )
 
+
     # ==========================================
-    # Convert MongoDB IDs
+    # CONVERT COMPANY ID
     # ==========================================
+
+    try:
+
+        company_object_id = ObjectId(
+            str(company_id)
+        )
+
+    except Exception:
+
+        raise ValueError(
+            f"Invalid company_id: {company_id}"
+        )
+
+
+    # ==========================================
+    # CONVERT UPLOAD JOB ID
+    # ==========================================
+
+    upload_object_id = None
+
+    if upload_job_id:
+
+        try:
+
+            upload_object_id = ObjectId(
+                str(upload_job_id)
+            )
+
+        except Exception:
+
+            raise ValueError(
+                "Invalid upload_job_id: "
+                f"{upload_job_id}"
+            )
+
+
+    # ==========================================
+    # PREPARE RECORDS
+    # ==========================================
+
+    cleaned_records = []
+
 
     for record in records:
 
-        # --------------------------------------
-        # companyId
-        # --------------------------------------
+        cleaned_record = {}
 
-        if "companyId" in record:
-
-            try:
-
-                record["companyId"] = ObjectId(
-                    str(record["companyId"])
-                )
-
-            except Exception:
-
-                raise ValueError(
-                    f"Invalid companyId: "
-                    f"{record['companyId']}"
-                )
-
-        # --------------------------------------
-        # uploadJobId
-        # --------------------------------------
-
-        if upload_job_id:
-
-            try:
-
-                record["uploadJobId"] = ObjectId(
-                    str(upload_job_id)
-                )
-
-            except Exception:
-
-                raise ValueError(
-                    f"Invalid uploadJobId: "
-                    f"{upload_job_id}"
-                )
-
-        else:
-
-            record["uploadJobId"] = None
-
-    # ==========================================
-    # Convert NaN → None
-    # ==========================================
-
-    for record in records:
 
         for key, value in record.items():
 
-            if pd_is_nan(value):
+            # ----------------------------------
+            # NEVER TRUST COMPANY ID FROM CSV
+            # ----------------------------------
 
-                record[key] = None
+            if key in [
+                "companyId",
+                "company_id",
+                "company",
+            ]:
+
+                continue
+
+
+            # ----------------------------------
+            # Convert pandas NaN / NaT
+            # ----------------------------------
+
+            if pd.isna(value):
+
+                cleaned_record[key] = None
+
+                continue
+
+
+            # ----------------------------------
+            # Pandas Timestamp
+            # ----------------------------------
+
+            if isinstance(
+                value,
+                pd.Timestamp
+            ):
+
+                cleaned_record[key] = (
+                    value.to_pydatetime()
+                )
+
+                continue
+
+
+            # ----------------------------------
+            # Numpy values
+            # ----------------------------------
+
+            if isinstance(
+                value,
+                np.generic
+            ):
+
+                cleaned_record[key] = (
+                    value.item()
+                )
+
+                continue
+
+
+            # ----------------------------------
+            # Normal value
+            # ----------------------------------
+
+            cleaned_record[key] = value
+
+
+        # ======================================
+        # TENANT INFORMATION
+        # ======================================
+
+        cleaned_record[
+            "companyId"
+        ] = company_object_id
+
+
+        cleaned_record[
+            "uploadJobId"
+        ] = upload_object_id
+
+
+        cleaned_records.append(
+            cleaned_record
+        )
+
 
     # ==========================================
-    # Bulk Insert
+    # DEBUG — SHOW FINAL SCHEMA
+    # ==========================================
+
+    print(
+        "\nFinal MongoDB fields:"
+    )
+
+    if cleaned_records:
+
+        print(
+            list(
+                cleaned_records[0].keys()
+            )
+        )
+
+
+    # ==========================================
+    # BULK INSERT
     # ==========================================
 
     result = collection.insert_many(
-        records
+        cleaned_records
     )
+
 
     inserted_count = len(
         result.inserted_ids
     )
+
 
     print(
         f"{inserted_count} records inserted "
         f"into {collection_name}"
     )
 
+
     return inserted_count
-
-
-# ==========================================
-# NaN Helper
-# ==========================================
-
-def pd_is_nan(value):
-
-    try:
-
-        return value != value
-
-    except Exception:
-
-        return False

@@ -8,17 +8,38 @@ import {
   deleteInventory,
 } from "../controllers/inventoryController.js";
 
+import { protect } from "../middleware/authMiddleware.js";
+import { authorize } from "../middleware/roleMiddleware.js";
+
 const router = express.Router();
 
 router
   .route("/")
-  .post(createInventory)
-  .get(getInventories);
+  .post(
+    protect,
+    authorize("admin", "manager", "operator"),
+    createInventory
+  )
+  .get(
+    protect,
+    getInventories
+  );
 
 router
   .route("/:id")
-  .get(getInventory)
-  .put(updateInventory)
-  .delete(deleteInventory);
+  .get(
+    protect,
+    getInventory
+  )
+  .put(
+    protect,
+    authorize("admin", "manager", "operator"),
+    updateInventory
+  )
+  .delete(
+    protect,
+    authorize("admin", "manager"),
+    deleteInventory
+  );
 
 export default router;

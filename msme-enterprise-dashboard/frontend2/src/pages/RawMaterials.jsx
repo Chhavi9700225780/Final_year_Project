@@ -747,7 +747,7 @@ import { useEffect, useMemo, useState } from "react"
 import { getRawMaterials } from "../services/api"
 import "./styles/RawMaterials.css"
 
-const COMPANY_ID = "68a123456789abcdef123456"
+//const COMPANY_ID = "68a123456789abcdef123456"
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(value || 0)
@@ -818,7 +818,7 @@ export default function RawMaterials() {
     try {
       setLoading(true)
       setError("")
-      const response = await getRawMaterials(COMPANY_ID)
+      const response = await getRawMaterials()
       console.log("Raw Materials API:", response.data)
       const responseData = response.data?.data
       let materialData = []

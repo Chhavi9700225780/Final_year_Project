@@ -1,77 +1,37 @@
 import pandas as pd
 
 
-def transform_data(df):
+# ============================================================
+# TRANSFORM DATA
+# ============================================================
 
-    print("\nStarting Data Transformation...")
+def transform_data(
+    df,
+    department
+):
 
-    # ==========================================
-    # Standardize column names
-    # ==========================================
-
-    df.columns = (
-        df.columns
-        .str.strip()
-        .str.lower()
-        .str.replace(" ", "_")
+    print(
+        "\nStarting Data Transformation..."
     )
 
-    # ==========================================
-    # Convert snake_case → camelCase
-    # ==========================================
 
-    column_mapping = {
+    df = df.copy()
 
-        # Common
-        "company_id": "companyId",
-        "upload_job_id": "uploadJobId",
 
-        # Production
-        "product_id": "productId",
-        "product_name": "productName",
-        "planned_quantity": "plannedQuantity",
-        "actual_quantity": "actualQuantity",
-        "defective_quantity": "defectiveQuantity",
-        "production_cost": "productionCost",
-        "production_date": "productionDate",
-
-        # Inventory
-        "opening_stock": "openingStock",
-        "produced_quantity": "producedQuantity",
-        "sold_quantity": "soldQuantity",
-        "closing_stock": "closingStock",
-        "record_date": "recordDate",
-
-        # Raw Material
-        "material_id": "materialId",
-        "material_name": "materialName",
-        "current_stock": "currentStock",
-        "minimum_stock": "minimumStock",
-        "unit_cost": "unitCost",
-        "last_updated": "lastUpdated",
-
-        # Finance
-        "transaction_type": "transactionType",
-        "transaction_date": "transactionDate",
-
-        # Sales
-        "customer_region": "customerRegion",
-        "sale_date": "saleDate",
-    }
-
-    df = df.rename(columns=column_mapping)
-
-    # ==========================================
-    # Date Columns
-    # ==========================================
+    # ========================================================
+    # DATE COLUMNS
+    # ========================================================
 
     date_columns = [
+
         "productionDate",
         "recordDate",
         "lastUpdated",
         "transactionDate",
         "saleDate",
+
     ]
+
 
     for column in date_columns:
 
@@ -79,33 +39,44 @@ def transform_data(df):
 
             df[column] = pd.to_datetime(
                 df[column],
-                errors="coerce"
+                errors="coerce",
+                dayfirst=True
             )
 
-    # ==========================================
-    # Numeric Columns
-    # ==========================================
+
+    # ========================================================
+    # NUMERIC COLUMNS
+    # ========================================================
 
     numeric_columns = [
+
+        # Production
         "plannedQuantity",
         "actualQuantity",
         "defectiveQuantity",
         "productionCost",
+        "efficiencyPct",
 
+        # Inventory
         "openingStock",
         "producedQuantity",
         "soldQuantity",
         "closingStock",
-
-        "currentStock",
         "minimumStock",
+
+        # Raw Materials
+        "currentStock",
         "unitCost",
 
+        # Finance
         "amount",
 
+        # Sales
         "quantity",
         "revenue",
+
     ]
+
 
     for column in numeric_columns:
 
@@ -116,28 +87,106 @@ def transform_data(df):
                 errors="coerce"
             )
 
-            df[column] = df[column].fillna(0)
+            df[column] = (
+                df[column]
+                .fillna(0)
+                .clip(lower=0)
+            )
 
-            # No negative values
-            df[column] = df[column].clip(lower=0)
 
-    # ==========================================
-    # Remove duplicates
-    # ==========================================
+    # ========================================================
+    # TEXT CLEANING
+    # ========================================================
+
+    for column in df.columns:
+
+        if df[column].dtype == "object":
+
+            df[column] = (
+                df[column]
+                .astype(str)
+                .str.strip()
+            )
+
+
+    # ========================================================
+    # NORMALIZE ENUM-LIKE FIELDS
+    # ========================================================
+
+    if "transactionType" in df.columns:
+
+        df["transactionType"] = (
+            df["transactionType"]
+            .astype(str)
+            .str.strip()
+            .str.lower()
+        )
+
+
+    if "status" in df.columns:
+
+        df["status"] = (
+            df["status"]
+            .astype(str)
+            .str.strip()
+        )
+
+
+    # ========================================================
+    # INVENTORY DEFAULTS
+    # ========================================================
+
+    if department == "inventory":
+
+        if "producedQuantity" not in df.columns:
+            df["producedQuantity"] = 0
+
+        if "soldQuantity" not in df.columns:
+            df["soldQuantity"] = 0
+
+
+    # ========================================================
+    # REMOVE DUPLICATES
+    # ========================================================
+
+    before = len(df)
 
     df = df.drop_duplicates()
 
-    # ==========================================
-    # Reset index
-    # ==========================================
+    print(
+        f"Duplicate rows removed: "
+        f"{before - len(df)}"
+    )
 
-    df = df.reset_index(drop=True)
 
-    print("Transformation Completed Successfully")
+    # ========================================================
+    # RESET INDEX
+    # ========================================================
 
-    print(f"Final Rows : {len(df)}")
+    df = df.reset_index(
+        drop=True
+    )
 
-    print("Final Columns:")
-    print(list(df.columns))
+
+    # ========================================================
+    # FINAL OUTPUT
+    # ========================================================
+
+    print(
+        "Transformation Completed Successfully"
+    )
+
+    print(
+        f"Final Rows : {len(df)}"
+    )
+
+    print(
+        "Final Columns:"
+    )
+
+    print(
+        list(df.columns)
+    )
+
 
     return df

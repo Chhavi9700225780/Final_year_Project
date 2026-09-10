@@ -14,7 +14,7 @@ import { getProductions } from "../services/api";
    COMPANY
 ========================================================= */
 
-const COMPANY_ID = "68a123456789abcdef123456";
+//const COMPANY_ID = "68a123456789abcdef123456";
 
 
 /* =========================================================
@@ -490,10 +490,8 @@ export default function Production() {
           setLoading(true);
           setError("");
 
-          const response =
-            await getProductions(
-              COMPANY_ID
-            );
+          
+            const response = await getProductions();
 
           console.log(
             "Production API:",

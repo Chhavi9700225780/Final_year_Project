@@ -1,0 +1,9 @@
+inventoryId,itemName,category,unit,openingStock,receivedQty,issuedQty,closingStock,reorderLevel,stockStatus
+INV-001,Motor Housing,Components,pcs,5000,1180,850,3330,1500,Healthy
+INV-002,Steel Bracket,Components,pcs,4200,950,600,2650,1200,Healthy
+INV-003,Copper Wire,Raw Material,kg,1800,320,250,1230,500,Healthy
+INV-004,Aluminium Sheet,Raw Material,kg,2500,410,300,1790,600,Healthy
+INV-005,Control Panel,Finished Goods,pcs,1200,180,150,870,250,Healthy
+INV-006,Industrial Bolt M8,Components,pcs,8000,1200,1000,5800,1500,Healthy
+INV-007,Packaging Box,Packaging,pcs,6000,850,700,4450,1200,Healthy
+INV-008,Bearing 6204,Components,pcs,1600,260,220,1120,350,Healthy

@@ -1,0 +1,141 @@
+/* =========================================================
+   REGISTER PAGE
+   ========================================================= */
+
+.register-panel {
+  position: relative;
+  z-index: 5;
+
+  width: min(760px, calc(100% - 40px));
+
+  max-height: calc(100vh - 60px);
+
+  overflow-y: auto;
+
+  padding: 38px;
+
+  background: var(--forge-panel);
+
+  border: 1px solid var(--border);
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.35);
+
+  animation: loginPanelIn 0.45s ease-out;
+}
+
+
+/* =========================================================
+   REGISTER FORM
+   ========================================================= */
+
+.register-form {
+  margin-top: 25px;
+}
+
+
+/* =========================================================
+   REGISTER SECTION
+   ========================================================= */
+
+.register-section {
+  margin-bottom: 26px;
+}
+
+
+.register-section-title {
+  margin-bottom: 15px;
+
+  padding-bottom: 8px;
+
+  border-bottom: 1px solid var(--border);
+
+  font-family: var(--font-mono);
+
+  font-size: 9px;
+
+  letter-spacing: 0.18em;
+
+  color: var(--text-faint);
+}
+
+
+/* =========================================================
+   TWO COLUMN GRID
+   ========================================================= */
+
+.register-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 0 18px;
+}
+
+
+.register-full {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   REGISTER INPUTS
+   ========================================================= */
+
+.register-grid .login-field {
+  margin-bottom: 17px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .register-panel {
+    width: calc(100% - 24px);
+
+    max-height: calc(100vh - 30px);
+
+    padding: 25px 20px;
+  }
+
+  .register-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .register-full {
+    grid-column: auto;
+  }
+
+}
+.login-register-link {
+  width: 100%;
+
+  margin-top: 16px;
+
+  padding: 10px;
+
+  border: none;
+
+  background: transparent;
+
+  color: var(--text-faint);
+
+  cursor: pointer;
+
+  font-family: var(--font-mono);
+
+  font-size: 9px;
+
+  letter-spacing: 0.1em;
+
+  transition: color 0.2s ease;
+}
+
+
+.login-register-link:hover {
+  color: var(--text-bright);
+}

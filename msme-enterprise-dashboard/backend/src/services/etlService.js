@@ -12,10 +12,12 @@ const PYTHON_SCRIPT = path.join(
   "app.py"
 );
 
+
 export const runETL = ({
   filePath,
   department,
   uploadJobId,
+  companyId,
 }) => {
 
   return new Promise((resolve, reject) => {
@@ -27,6 +29,41 @@ export const runETL = ({
     console.log("File:", filePath);
     console.log("Department:", department);
     console.log("Upload Job:", uploadJobId);
+    console.log("Company ID:", companyId);
+
+
+    // ==========================================
+    // Validate required values
+    // ==========================================
+
+    if (!filePath) {
+      return reject(
+        new Error("ETL file path is required.")
+      );
+    }
+
+    if (!department) {
+      return reject(
+        new Error("ETL department is required.")
+      );
+    }
+
+    if (!uploadJobId) {
+      return reject(
+        new Error("ETL upload job ID is required.")
+      );
+    }
+
+    if (!companyId) {
+      return reject(
+        new Error("ETL company ID is required.")
+      );
+    }
+
+
+    // ==========================================
+    // Start Python ETL
+    // ==========================================
 
     const pythonProcess = spawn(
       "python",
@@ -35,14 +72,21 @@ export const runETL = ({
         filePath,
         department,
         uploadJobId,
+        companyId,
       ],
       {
         cwd: ETL_DIRECTORY,
       }
     );
 
+
     let output = "";
     let errorOutput = "";
+
+
+    // ==========================================
+    // Python STDOUT
+    // ==========================================
 
     pythonProcess.stdout.on(
       "data",
@@ -59,6 +103,11 @@ export const runETL = ({
       }
     );
 
+
+    // ==========================================
+    // Python STDERR
+    // ==========================================
+
     pythonProcess.stderr.on(
       "data",
       (data) => {
@@ -74,13 +123,21 @@ export const runETL = ({
       }
     );
 
+
+    // ==========================================
+    // Python Process Closed
+    // ==========================================
+
     pythonProcess.on(
       "close",
       (code) => {
 
         if (code === 0) {
 
-          // Try to get inserted record count
+          // --------------------------------------
+          // Get inserted record count
+          // --------------------------------------
+
           const match =
             output.match(
               /(\d+)\s+records inserted/i
@@ -91,6 +148,17 @@ export const runETL = ({
               ? Number(match[1])
               : 0;
 
+
+          console.log(
+            "Python ETL completed successfully."
+          );
+
+          console.log(
+            "Records inserted:",
+            recordCount
+          );
+
+
           resolve({
             success: true,
             output,
@@ -99,16 +167,24 @@ export const runETL = ({
 
         } else {
 
+          const errorMessage =
+            errorOutput ||
+            output ||
+            `ETL failed with code ${code}`;
+
+
           reject(
-            new Error(
-              errorOutput ||
-              `ETL failed with code ${code}`
-            )
+            new Error(errorMessage)
           );
 
         }
       }
     );
+
+
+    // ==========================================
+    // Python Process Error
+    // ==========================================
 
     pythonProcess.on(
       "error",
@@ -122,5 +198,7 @@ export const runETL = ({
 
       }
     );
+
   });
+
 };

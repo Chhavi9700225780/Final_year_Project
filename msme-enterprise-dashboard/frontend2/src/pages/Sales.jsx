@@ -739,7 +739,7 @@ import { useEffect, useMemo, useState } from "react"
 import { getSales } from "../services/api"
 import "./styles/Sales.css"
 
-const COMPANY_ID = "68a123456789abcdef123456"
+//const COMPANY_ID = "68a123456789abcdef123456"
 
 
 
@@ -851,7 +851,7 @@ const Sales = () => {
       setLoading(true)
       setError("")
 
-      const response = await getSales(COMPANY_ID)
+      const response = await getSales()
       console.log("Sales API:", response.data)
 
       const responseData = (response.data )?.data

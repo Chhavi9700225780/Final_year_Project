@@ -756,7 +756,7 @@ import { getInventory } from "../services/api";
 
 import "./styles/Inventory.css"
 
-const COMPANY_ID = "68a123456789abcdef123456"
+//const COMPANY_ID = "68a123456789abcdef123456"
 
 // ─── Types ────────────────────────────────────────────────────────────
 
@@ -861,7 +861,7 @@ const Inventory = () => {
       setLoading(true)
       setError("")
 
-      const response = await getInventory(COMPANY_ID)
+      const response = await getInventory()
 
       console.log("Inventory API:", response.data)
       console.log("FIRST INVENTORY RECORD:", response.data?.data?.[0])

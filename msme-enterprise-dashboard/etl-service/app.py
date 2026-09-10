@@ -1,10 +1,20 @@
 import sys
+import json
 
 try:
-    sys.stdout.reconfigure(encoding="utf-8")
-    sys.stderr.reconfigure(encoding="utf-8")
+
+    sys.stdout.reconfigure(
+        encoding="utf-8"
+    )
+
+    sys.stderr.reconfigure(
+        encoding="utf-8"
+    )
+
 except Exception:
+
     pass
+
 
 from extractor import extract_data
 from validator import validate_data
@@ -13,91 +23,316 @@ from loader import load_data
 from analytics import generate_kpis
 from alert_engine import generate_alerts
 from utils import dataframe_summary
+from schema_detector import detect_mapping
 
 
-def start_pipeline(file_path, department, upload_job_id):
+# ============================================================
+# NORMAL ETL PIPELINE
+# ============================================================
+
+def start_pipeline(
+    file_path,
+    department,
+    upload_job_id,
+    company_id
+):
 
     print("=" * 60)
     print("Enterprise ETL Pipeline Started")
     print("=" * 60)
 
-    print(f"File       : {file_path}")
-    print(f"Department : {department}")
+    print(
+        f"File       : {file_path}"
+    )
 
-    # ==========================================
-    # 1. Extract
-    # ==========================================
+    print(
+        f"Department : {department}"
+    )
 
-    dataframe = extract_data(file_path)
+    print(
+        f"Company ID : {company_id}"
+    )
 
-    print("\nExtraction Completed")
+    print(
+        f"Upload Job : {upload_job_id}"
+    )
 
-    print(dataframe_summary(dataframe))
+    # ========================================================
+    # 1. EXTRACT
+    # ========================================================
 
-    # ==========================================
-    # 2. Validate
-    # ==========================================
+    dataframe = extract_data(
+        file_path
+    )
+
+    print(
+        "\nExtraction Completed"
+    )
+
+    print(
+        dataframe_summary(
+            dataframe
+        )
+    )
+
+    # ========================================================
+    # 2. VALIDATE + AUTO MAP
+    # ========================================================
 
     dataframe = validate_data(
         dataframe,
         department
     )
 
-    print("\nValidation Completed")
+    print(
+        "\nValidation Completed"
+    )
 
-    # ==========================================
-    # 3. Transform
-    # ==========================================
+    # ========================================================
+    # 3. TRANSFORM
+    # ========================================================
 
-    dataframe = transform_data(dataframe)
-
-    print("\nTransformation Completed")
-
-    # ==========================================
-    # 4. Load
-    # ==========================================
-
-    inserted = load_data(
+    dataframe = transform_data(
         dataframe,
-        department,
-        upload_job_id
+        department
     )
 
     print(
-        f"\n{inserted} records inserted into MongoDB."
+        "\nTransformation Completed"
     )
 
-    # ==========================================
-    # 5. Analytics
-    # ==========================================
+    # ========================================================
+    # 4. LOAD
+    # ========================================================
 
-    generate_kpis(department)
+    inserted = load_data(
 
-    print("\nKPI Generation Completed")
+        dataframe,
 
-    # ==========================================
-    # 6. Alerts
-    # ==========================================
+        department,
 
-    generate_alerts(department)
+        upload_job_id,
 
-    print("\nAlert Generation Completed")
+        company_id
+    )
 
-    print("\n" + "=" * 60)
-    print("Pipeline Finished Successfully")
-    print("=" * 60)
+    print(
+        f"\n{inserted} records "
+        f"inserted into MongoDB."
+    )
 
+    # ========================================================
+    # 5. ANALYTICS
+    # ========================================================
+
+    generate_kpis(
+        department,
+        company_id
+    )
+
+    print(
+        "\nKPI Generation Completed"
+    )
+
+    # ========================================================
+    # 6. ALERTS
+    # ========================================================
+
+    alerts = generate_alerts(
+        department,
+        company_id
+    )
+
+    print(
+        "\nAlert Generation Completed"
+    )
+
+    # ========================================================
+    # COMPLETE
+    # ========================================================
+
+    print(
+        "\n" + "=" * 60
+    )
+
+    print(
+        "Pipeline Finished Successfully"
+    )
+
+    print(
+        "=" * 60
+    )
+
+    return {
+
+        "recordCount":
+            inserted,
+
+        "alerts":
+            alerts,
+
+    }
+
+
+# ============================================================
+# DATASET PREVIEW
+# ============================================================
+
+def preview_dataset(
+    file_path,
+    department
+):
+
+    print(
+        "\n" + "=" * 60
+    )
+
+    print(
+        "DATASET SCHEMA DETECTION"
+    )
+
+    print(
+        "=" * 60
+    )
+
+    print(
+        f"File       : {file_path}"
+    )
+
+    print(
+        f"Department : {department}"
+    )
+
+    # ========================================================
+    # EXTRACT
+    # ========================================================
+
+    dataframe = extract_data(
+        file_path
+    )
+
+    columns = list(
+        dataframe.columns
+    )
+
+    # ========================================================
+    # DETECT MAPPING
+    # ========================================================
+
+    mapping = detect_mapping(
+        columns,
+        department
+    )
+
+    result = {
+
+        "success":
+            True,
+
+        "department":
+            department,
+
+        "columns":
+            columns,
+
+        "mapping":
+            mapping,
+
+    }
+
+    print(
+        "\nSchema detection completed."
+    )
+
+    # ========================================================
+    # JSON RESULT
+    # ========================================================
+
+    print(
+        "SCHEMA_RESULT:"
+        + json.dumps(
+            result,
+            ensure_ascii=False
+        )
+    )
+
+
+# ============================================================
+# MAIN
+# ============================================================
 
 def main():
 
-    # ==========================================
-    # Command Line Arguments
-    # ==========================================
+    allowed_departments = [
 
-    if len(sys.argv) != 4:
+        "production",
+        "inventory",
+        "raw-materials",
+        "finance",
+        "sales",
+
+    ]
+
+    # ========================================================
+    # PREVIEW MODE
+    # ========================================================
+
+    if (
+        len(sys.argv) >= 2
+        and sys.argv[1] == "preview"
+    ):
+
+        if len(sys.argv) != 4:
+
+            print(
+                "Usage: python app.py "
+                "preview <file_path> "
+                "<department>"
+            )
+
+            sys.exit(1)
+
+        file_path = sys.argv[2]
+
+        department = sys.argv[3]
+
+        if department not in allowed_departments:
+
+            print(
+                f"Invalid department: "
+                f"{department}"
+            )
+
+            sys.exit(1)
+
+        try:
+
+            preview_dataset(
+                file_path,
+                department
+            )
+
+            sys.exit(0)
+
+        except Exception as error:
+
+            print(
+                f"Schema detection failed: "
+                f"{error}"
+            )
+
+            sys.exit(1)
+
+    # ========================================================
+    # NORMAL ETL MODE
+    # ========================================================
+
+    if len(sys.argv) != 5:
 
         print(
-            "Usage: python app.py <file_path> <department>"
+            "Usage: python app.py "
+            "<file_path> <department> "
+            "<upload_job_id> <company_id>"
         )
 
         sys.exit(1)
@@ -108,38 +343,52 @@ def main():
 
     upload_job_id = sys.argv[3]
 
-    allowed_departments = [
-        "production",
-        "inventory",
-        "raw-materials",
-        "finance",
-        "sales",
-    ]
+    company_id = sys.argv[4]
+
+    # ========================================================
+    # VALIDATE DEPARTMENT
+    # ========================================================
 
     if department not in allowed_departments:
 
         print(
-            f"Invalid department: {department}"
+            f"Invalid department: "
+            f"{department}"
         )
 
         sys.exit(1)
 
+    # ========================================================
+    # RUN PIPELINE
+    # ========================================================
+
     try:
 
         start_pipeline(
+
             file_path,
+
             department,
-            upload_job_id
+
+            upload_job_id,
+
+            company_id
+
         )
 
     except Exception as error:
 
         print(
-            f"ETL Pipeline Failed: {error}"
+            f"ETL Pipeline Failed: "
+            f"{error}"
         )
 
         sys.exit(1)
 
+
+# ============================================================
+# ENTRY POINT
+# ============================================================
 
 if __name__ == "__main__":
 

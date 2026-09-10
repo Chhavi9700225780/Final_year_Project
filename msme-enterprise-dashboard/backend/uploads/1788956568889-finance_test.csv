@@ -1,0 +1,11 @@
+transaction_id,date,category,type,description,amountINR
+TX001,2026-08-01,Sales,Revenue,Hydraulic Pump orders,485000
+TX002,2026-08-02,Raw Materials,Expense,Steel and copper purchase,165000
+TX003,2026-08-03,Sales,Revenue,Control Panel orders,325000
+TX004,2026-08-04,Operations,Expense,Factory electricity,72000
+TX005,2026-08-05,Sales,Revenue,Motor Assembly orders,410000
+TX006,2026-08-06,Payroll,Expense,Monthly wages,210000
+TX007,2026-08-07,Sales,Revenue,Gear Unit orders,295000
+TX008,2026-08-08,Maintenance,Expense,Machine maintenance,58000
+TX009,2026-08-09,Sales,Revenue,Valve Set orders,275000
+TX010,2026-08-10,Logistics,Expense,Transport and delivery,64000

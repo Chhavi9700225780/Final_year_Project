@@ -8,17 +8,38 @@ import {
   deleteRawMaterial,
 } from "../controllers/rawMaterialController.js";
 
+import { protect } from "../middleware/authMiddleware.js";
+import { authorize } from "../middleware/roleMiddleware.js";
+
 const router = express.Router();
 
 router
   .route("/")
-  .post(createRawMaterial)
-  .get(getRawMaterials);
+  .post(
+    protect,
+    authorize("admin", "manager", "operator"),
+    createRawMaterial
+  )
+  .get(
+    protect,
+    getRawMaterials
+  );
 
 router
   .route("/:id")
-  .get(getRawMaterial)
-  .put(updateRawMaterial)
-  .delete(deleteRawMaterial);
+  .get(
+    protect,
+    getRawMaterial
+  )
+  .put(
+    protect,
+    authorize("admin", "manager", "operator"),
+    updateRawMaterial
+  )
+  .delete(
+    protect,
+    authorize("admin", "manager"),
+    deleteRawMaterial
+  );
 
 export default router;

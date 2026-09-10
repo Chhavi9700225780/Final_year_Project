@@ -4,14 +4,6 @@ import fs from "fs";
 import UploadJob from "../models/UploadJob.js";
 import { runETL } from "../services/etlService.js";
 
-// ==========================================
-// Company
-// ==========================================
-
-// Temporary development company ID.
-// Later we'll get this from authentication.
-const DEFAULT_COMPANY_ID =
-  "68a123456789abcdef123456";
 
 // ==========================================
 // Upload Dataset
@@ -21,6 +13,22 @@ export const uploadDataset = async (req, res) => {
   let uploadJob = null;
 
   try {
+
+    // ----------------------------------------
+    // Authentication / Company
+    // ----------------------------------------
+
+    const companyId = req.user?.companyId;
+
+    if (!companyId) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "User is not associated with a company",
+      });
+    }
+
+
     // ----------------------------------------
     // Check file
     // ----------------------------------------
@@ -28,9 +36,11 @@ export const uploadDataset = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: "Please upload a CSV or Excel file.",
+        message:
+          "Please upload a CSV or Excel file.",
       });
     }
+
 
     // ----------------------------------------
     // Department
@@ -54,6 +64,7 @@ export const uploadDataset = async (req, res) => {
       });
     }
 
+
     // ----------------------------------------
     // Generate SHA-256 file hash
     // ----------------------------------------
@@ -72,21 +83,24 @@ export const uploadDataset = async (req, res) => {
       fileHash
     );
 
+
     // ----------------------------------------
     // Check duplicate
     // ----------------------------------------
 
     const existingUpload =
       await UploadJob.findOne({
-        companyId: DEFAULT_COMPANY_ID,
+        companyId,
         department,
         fileHash,
       });
 
     if (existingUpload) {
 
-      // Delete newly uploaded duplicate file
-      fs.unlinkSync(req.file.path);
+      // Delete duplicate uploaded file
+      if (fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
 
       return res.status(409).json({
         success: false,
@@ -96,26 +110,33 @@ export const uploadDataset = async (req, res) => {
 
         uploadJob: {
           id: existingUpload._id,
+
           fileName:
             existingUpload.originalFileName,
+
           department:
             existingUpload.department,
+
           recordCount:
             existingUpload.recordCount,
+
           status:
             existingUpload.status,
+
           uploadedAt:
             existingUpload.createdAt,
         },
       });
     }
 
+
     // ----------------------------------------
     // Create Upload Job
     // ----------------------------------------
 
     uploadJob = await UploadJob.create({
-      companyId: DEFAULT_COMPANY_ID,
+
+      companyId,
 
       originalFileName:
         req.file.originalname,
@@ -135,16 +156,23 @@ export const uploadDataset = async (req, res) => {
       uploadJob._id
     );
 
+
     // ----------------------------------------
     // Run ETL
     // ----------------------------------------
 
     const etlResult = await runETL({
       filePath: req.file.path,
+
       department,
+
       uploadJobId:
         uploadJob._id.toString(),
+
+      companyId:
+        companyId.toString(),
     });
+
 
     // ----------------------------------------
     // Update Upload Job
@@ -162,23 +190,31 @@ export const uploadDataset = async (req, res) => {
       }
     );
 
+
     // ----------------------------------------
     // Success
     // ----------------------------------------
 
     return res.status(201).json({
+
       success: true,
 
       message:
         "Dataset uploaded and processed successfully.",
 
       uploadJob: {
+
         id: uploadJob._id,
+
         fileName:
           uploadJob.originalFileName,
+
         department:
           uploadJob.department,
-        status: "completed",
+
+        status:
+          "completed",
+
         recordCount:
           etlResult.recordCount || 0,
       },
@@ -190,6 +226,7 @@ export const uploadDataset = async (req, res) => {
       "Upload error:",
       error
     );
+
 
     // ----------------------------------------
     // Mark UploadJob Failed
@@ -208,7 +245,9 @@ export const uploadDataset = async (req, res) => {
       );
     }
 
+
     return res.status(500).json({
+
       success: false,
 
       message:

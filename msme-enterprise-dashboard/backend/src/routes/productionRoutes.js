@@ -8,14 +8,38 @@ import {
   deleteProduction,
 } from "../controllers/productionController.js";
 
+import { protect } from "../middleware/authMiddleware.js";
+import { authorize } from "../middleware/roleMiddleware.js";
+
 const router = express.Router();
 
-router.route("/").post(createProduction).get(getProductions);
+router
+  .route("/")
+  .post(
+    protect,
+    authorize("admin", "manager", "operator"),
+    createProduction
+  )
+  .get(
+    protect,
+    getProductions
+  );
 
 router
   .route("/:id")
-  .get(getProduction)
-  .put(updateProduction)
-  .delete(deleteProduction);
+  .get(
+    protect,
+    getProduction
+  )
+  .put(
+    protect,
+    authorize("admin", "manager", "operator"),
+    updateProduction
+  )
+  .delete(
+    protect,
+    authorize("admin", "manager"),
+    deleteProduction
+  );
 
 export default router;

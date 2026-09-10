@@ -1,0 +1,9 @@
+productionId,date,line,product,plannedQty,actualQty,efficiencyPct,defectQty,status
+PRD-001,2026-08-21,Assembly Line A,Motor Housing,1200,1125,94,18,Completed
+PRD-002,2026-08-21,Assembly Line B,Steel Bracket,950,910,96,12,Completed
+PRD-003,2026-08-22,Assembly Line A,Motor Housing,1250,1180,95,21,Completed
+PRD-004,2026-08-22,Assembly Line C,Control Panel,700,645,92,15,Completed
+PRD-005,2026-08-23,Assembly Line B,Steel Bracket,1000,970,97,9,Completed
+PRD-006,2026-08-23,Assembly Line C,Control Panel,760,690,91,24,Completed
+PRD-007,2026-08-24,Assembly Line A,Motor Housing,1300,1215,93,20,In Progress
+PRD-008,2026-08-24,Assembly Line B,Steel Bracket,1050,1010,96,11,In Progress

@@ -1,0 +1,11 @@
+inventory_id,product_name,opening_stock,closing_stock,minimum_stock,record_date,warehouse,produced_quantity,sold_quantity
+2001,Hydraulic Pump,120,85,40,2026-08-01,Warehouse A,50,85
+2002,Control Panel,90,55,35,2026-08-02,Warehouse A,30,65
+2003,Motor Assembly,150,72,60,2026-08-03,Warehouse B,80,158
+2004,Gear Unit,110,48,50,2026-08-04,Warehouse B,40,102
+2005,Valve Set,180,125,70,2026-08-05,Warehouse C,90,145
+2006,Bearing 6204,250,95,100,2026-08-06,Warehouse C,120,275
+2007,Copper Cable,500,210,180,2026-08-07,Warehouse A,300,590
+2008,Steel Rod,400,160,150,2026-08-08,Warehouse B,250,490
+2009,Switch Module,130,42,50,2026-08-09,Warehouse C,60,148
+2010,Relay Unit,170,90,60,2026-08-10,Warehouse A,75,155

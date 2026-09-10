@@ -1,0 +1,11 @@
+sale_id,date,order_id,customer,product,quantity,amountINR,payment_method,status
+S001,2026-08-01,ORD001,ABC Engineering,Hydraulic Pump,25,187500,UPI,Paid
+S002,2026-08-02,ORD002,Metro Industries,Control Panel,12,144000,Bank Transfer,Paid
+S003,2026-08-03,ORD003,Prime Automation,Motor Assembly,18,234000,Credit,Pending
+S004,2026-08-04,ORD004,Shakti Manufacturing,Gear Unit,20,210000,Bank Transfer,Paid
+S005,2026-08-05,ORD005,Nova Systems,Valve Set,30,165000,UPI,Paid
+S006,2026-08-06,ORD006,ABC Engineering,Control Panel,8,96000,Credit,Pending
+S007,2026-08-07,ORD007,Metro Industries,Hydraulic Pump,15,112500,Bank Transfer,Paid
+S008,2026-08-08,ORD008,Prime Automation,Gear Unit,10,105000,UPI,Paid
+S009,2026-08-09,ORD009,Nova Systems,Motor Assembly,9,117000,Credit,Pending
+S010,2026-08-10,ORD010,Shakti Manufacturing,Valve Set,22,121000,Bank Transfer,Paid

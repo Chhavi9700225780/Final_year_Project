@@ -658,7 +658,7 @@ import { useEffect, useState } from "react"
 import { getDashboardSummary } from "../services/api"
 import "./styles/Reports.css"
 
-const COMPANY_ID = "68a123456789abcdef123456"
+//const COMPANY_ID = "68a123456789abcdef123456"
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(value || 0)

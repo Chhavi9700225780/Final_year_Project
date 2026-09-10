@@ -1,75 +1,155 @@
 import axios from "axios";
 
+
+// ======================================================
+// AXIOS INSTANCE
+// ======================================================
+
 const API = axios.create({
   baseURL: "http://localhost:5000/api",
+
   headers: {
     "Content-Type": "application/json",
   },
+
+  // Required for HttpOnly authentication cookie
+  withCredentials: true,
 });
 
-export const getDashboardSummary = (companyId) =>
-  API.get(`/dashboard/summary?companyId=${companyId}`);
 
-export const getProductions = (companyId) =>
-  API.get(`/production?companyId=${companyId}`);
+// ======================================================
+// AUTH
+// ======================================================
 
-export const getInventory = (companyId) =>
-  API.get(`/inventory?companyId=${companyId}`);
+export const login = (email, password) =>
+  API.post("/auth/login", {
+    email,
+    password,
+  });
 
-export const getRawMaterials = (companyId) =>
-  API.get(`/raw-materials?companyId=${companyId}`);
 
-export const getFinance = (companyId) =>
-  API.get(`/finance?companyId=${companyId}`);
+export const getCurrentUser = () =>
+  API.get("/auth/me");
 
-export const getFinanceTransactions = async (companyId) => {
-  return API.get(`/finance?companyId=${companyId}`);
-};
 
-export const getSales = (companyId) =>
-  API.get(`/sales?companyId=${companyId}`);
+export const logout = () =>
+  API.post("/auth/logout");
 
-export const getAlerts = (companyId) =>
-  API.get(`/alerts?companyId=${companyId}`);
 
-export const uploadDataset = (file, department) => {
+// ======================================================
+// DASHBOARD SUMMARY
+// ======================================================
+
+export const getDashboardSummary = () =>
+  API.get("/dashboard/summary");
+
+
+// ======================================================
+// DASHBOARD ANALYTICS
+// ======================================================
+
+export const getProductionTrend = () =>
+  API.get("/dashboard/production-trend");
+
+
+export const getFinanceTrend = () =>
+  API.get("/dashboard/finance-trend");
+
+
+export const getInventoryOverview = () =>
+  API.get("/dashboard/inventory-overview");
+
+
+export const getSalesRegions = () =>
+  API.get("/dashboard/sales-regions");
+
+
+// ======================================================
+// PRODUCTION
+// ======================================================
+
+export const getProductions = () =>
+  API.get("/production");
+
+
+// ======================================================
+// INVENTORY
+// ======================================================
+
+export const getInventory = () =>
+  API.get("/inventory");
+
+
+// ======================================================
+// RAW MATERIALS
+// ======================================================
+
+export const getRawMaterials = () =>
+  API.get("/raw-materials");
+
+
+// ======================================================
+// FINANCE
+// ======================================================
+
+export const getFinance = () =>
+  API.get("/finance");
+
+
+export const getFinanceTransactions = async () =>
+  API.get("/finance");
+
+
+// ======================================================
+// SALES
+// ======================================================
+
+export const getSales = () =>
+  API.get("/sales");
+
+
+// ======================================================
+// ALERTS
+// ======================================================
+
+export const getAlerts = () =>
+  API.get("/alerts");
+
+
+// ======================================================
+// DATASET UPLOAD
+// ======================================================
+
+export const uploadDataset = (
+  file,
+  department
+) => {
   const formData = new FormData();
 
-  formData.append("file", file);
-  formData.append("department", department);
-
-  return API.post("/uploads", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-};
-
-
-export const getProductionTrend = async (companyId) => {
-  return API.get(
-    `/dashboard/production-trend?companyId=${companyId}`
+  formData.append(
+    "file",
+    file
   );
-};
 
-export const getFinanceTrend = async (companyId) => {
-  return API.get(
-    `/dashboard/finance-trend?companyId=${companyId}`
+  formData.append(
+    "department",
+    department
   );
-};
 
-export const getInventoryOverview = async (companyId) => {
-  return API.get(
-    `/dashboard/inventory-overview?companyId=${companyId}`
-  );
-};
-
-export const getSalesRegions = async (companyId) => {
-  return API.get(
-    `/dashboard/sales-regions?companyId=${companyId}`
+  return API.post(
+    "/uploads",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
   );
 };
 
 
+// ======================================================
+// DEFAULT EXPORT
+// ======================================================
 
 export default API;

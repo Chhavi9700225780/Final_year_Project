@@ -1,93 +1,347 @@
 from pymongo import MongoClient
-from config import MONGO_URI, DATABASE_NAME
+from bson import ObjectId
 
-client = MongoClient(MONGO_URI)
+from config import (
+    MONGO_URI,
+    DATABASE_NAME
+)
 
-db = client[DATABASE_NAME]
+
+# ============================================================
+# MONGODB CONNECTION
+# ============================================================
+
+client = MongoClient(
+    MONGO_URI
+)
+
+db = client[
+    DATABASE_NAME
+]
 
 
-def generate_alerts(department):
+# ============================================================
+# GENERATE ALERTS
+# ============================================================
 
-    print("\nChecking Alerts...")
+def generate_alerts(
+    department,
+    company_id
+):
+
+    print(
+        "\nChecking Alerts..."
+    )
 
     alerts = []
 
+    # ========================================================
+    # VALIDATE COMPANY ID
+    # ========================================================
+
+    try:
+
+        company_object_id = ObjectId(
+            str(company_id)
+        )
+
+    except Exception:
+
+        raise ValueError(
+            f"Invalid company_id: "
+            f"{company_id}"
+        )
+
+    # ========================================================
+    # INVENTORY ALERTS
+    # ========================================================
+
     if department == "inventory":
 
-        collection = db["inventoryrecords"]
+        collection = db[
+            "inventoryrecords"
+        ]
 
-        for item in collection.find():
+        records = collection.find({
+            "companyId":
+                company_object_id
+        })
 
-            if item.get("current_stock", 0) < item.get("minimum_stock", 0):
+        for item in records:
+
+            current_stock = (
+                item.get(
+                    "closingStock",
+                    0
+                )
+                or 0
+            )
+
+            minimum_stock = (
+                item.get(
+                    "minimumStock",
+                    0
+                )
+                or 0
+            )
+
+            if current_stock < minimum_stock:
+
+                item_name = (
+                    item.get(
+                        "itemName",
+                        "Unknown item"
+                    )
+                )
 
                 alerts.append({
-                    "type": "LOW_STOCK",
-                    "message": f"{item.get('product_name')} stock is below minimum."
+
+                    "type":
+                        "LOW_STOCK",
+
+                    "message":
+                        (
+                            f"{item_name} "
+                            f"stock is below minimum."
+                        ),
                 })
+
+    # ========================================================
+    # RAW MATERIAL ALERTS
+    # ========================================================
+
+    elif department == "raw-materials":
+
+        collection = db[
+            "rawmaterials"
+        ]
+
+        records = collection.find({
+            "companyId":
+                company_object_id
+        })
+
+        for item in records:
+
+            current_stock = (
+                item.get(
+                    "currentStock",
+                    0
+                )
+                or 0
+            )
+
+            minimum_stock = (
+                item.get(
+                    "minimumStock",
+                    0
+                )
+                or 0
+            )
+
+            if current_stock < minimum_stock:
+
+                material_name = (
+                    item.get(
+                        "materialName",
+                        "Unknown material"
+                    )
+                )
+
+                alerts.append({
+
+                    "type":
+                        "LOW_RAW_MATERIAL",
+
+                    "message":
+                        (
+                            f"{material_name} "
+                            f"raw material stock "
+                            f"is below minimum."
+                        ),
+                })
+
+    # ========================================================
+    # PRODUCTION ALERTS
+    # ========================================================
 
     elif department == "production":
 
-        collection = db["productionrecords"]
+        collection = db[
+            "productionrecords"
+        ]
 
-        for item in collection.find():
+        records = collection.find({
+            "companyId":
+                company_object_id
+        })
 
-            planned = item.get("planned_quantity", 0)
-            actual = item.get("actual_quantity", 0)
+        for item in records:
+
+            product_name = (
+                item.get(
+                    "productName",
+                    "Unknown product"
+                )
+            )
+
+            planned = (
+                item.get(
+                    "plannedQuantity",
+                    0
+                )
+                or 0
+            )
+
+            actual = (
+                item.get(
+                    "actualQuantity",
+                    0
+                )
+                or 0
+            )
+
+            # ------------------------------------------------
+            # Production Efficiency
+            # ------------------------------------------------
 
             if planned > 0:
 
-                efficiency = (actual / planned) * 100
+                efficiency = (
+                    actual / planned
+                ) * 100
 
                 if efficiency < 80:
 
                     alerts.append({
-                        "type": "LOW_PRODUCTION",
-                        "message": f"{item.get('product_name')} production efficiency is below 80%."
+
+                        "type":
+                            "LOW_PRODUCTION",
+
+                        "message":
+                            (
+                                f"{product_name} "
+                                f"production efficiency "
+                                f"is below 80%."
+                            ),
                     })
 
-            defective = item.get("defective_quantity", 0)
+            # ------------------------------------------------
+            # Defect Rate
+            # ------------------------------------------------
+
+            defective = (
+                item.get(
+                    "defectiveQuantity",
+                    0
+                )
+                or 0
+            )
 
             if actual > 0:
 
-                defect_rate = (defective / actual) * 100
+                defect_rate = (
+                    defective / actual
+                ) * 100
 
                 if defect_rate > 10:
 
                     alerts.append({
-                        "type": "HIGH_DEFECT",
-                        "message": f"{item.get('product_name')} defect rate exceeded 10%."
+
+                        "type":
+                            "HIGH_DEFECT",
+
+                        "message":
+                            (
+                                f"{product_name} "
+                                f"defect rate "
+                                f"exceeded 10%."
+                            ),
                     })
+
+    # ========================================================
+    # FINANCE ALERTS
+    # ========================================================
 
     elif department == "finance":
 
-        collection = db["financetransactions"]
+        collection = db[
+            "financetransactions"
+        ]
 
-        income = 0
+        records = collection.find({
+            "companyId":
+                company_object_id
+        })
+
+        revenue = 0
         expense = 0
 
-        for item in collection.find():
+        for item in records:
 
-            if item.get("transaction_type", "").lower() == "income":
-                income += item.get("amount", 0)
+            transaction_type = (
+                str(
+                    item.get(
+                        "transactionType",
+                        ""
+                    )
+                )
+                .strip()
+                .lower()
+            )
 
-            elif item.get("transaction_type", "").lower() == "expense":
-                expense += item.get("amount", 0)
+            amount = (
+                item.get(
+                    "amount",
+                    0
+                )
+                or 0
+            )
 
-        if expense > income:
+            if transaction_type == "revenue":
+
+                revenue += amount
+
+            elif transaction_type == "expense":
+
+                expense += amount
+
+        if expense > revenue:
 
             alerts.append({
-                "type": "FINANCIAL_LOSS",
-                "message": "Expenses exceed total income."
+
+                "type":
+                    "FINANCIAL_LOSS",
+
+                "message":
+                    (
+                        "Expenses exceed "
+                        "total revenue."
+                    ),
             })
+
+    # ========================================================
+    # RESULT
+    # ========================================================
 
     if not alerts:
 
-        print("No Alerts Found")
+        print(
+            "No Alerts Found"
+        )
 
     else:
 
-        print(f"{len(alerts)} Alert(s) Generated\n")
+        print(
+            f"{len(alerts)} "
+            f"Alert(s) Generated\n"
+        )
 
         for alert in alerts:
 
-            print(f"[{alert['type']}] {alert['message']}")
+            print(
+                f"[{alert['type']}] "
+                f"{alert['message']}"
+            )
+
+    return alerts

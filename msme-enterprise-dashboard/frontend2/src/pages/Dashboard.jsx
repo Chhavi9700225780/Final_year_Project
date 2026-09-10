@@ -26,7 +26,7 @@ import "./styles/Dashboard.css"
 
 // ─── Company ──────────────────────────────────────────────────────────
 
-const COMPANY_ID = "68a123456789abcdef123456"
+//const COMPANY_ID = "68a123456789abcdef123456"
 
 // ─── Region colors ────────────────────────────────────────────────────
 
@@ -506,35 +506,19 @@ export default function Dashboard({ activePage }) {
       setSpinning(true)
       setError("")
 
-      const [
-        summaryResponse,
-        productionResponse,
-        financeResponse,
-        inventoryResponse,
-        salesResponse,
-      ] = await Promise.all([
-
-        getDashboardSummary(
-          COMPANY_ID
-        ),
-
-        getProductionTrend(
-          COMPANY_ID
-        ),
-
-        getFinanceTrend(
-          COMPANY_ID
-        ),
-
-        getInventoryOverview(
-          COMPANY_ID
-        ),
-
-        getSalesRegions(
-          COMPANY_ID
-        ),
-
-      ])
+     const [
+  summaryResponse,
+  productionResponse,
+  financeResponse,
+  inventoryResponse,
+  salesResponse,
+] = await Promise.all([
+  getDashboardSummary(),
+  getProductionTrend(),
+  getFinanceTrend(),
+  getInventoryOverview(),
+  getSalesRegions(),
+])
 
       // ── Summary ───────────────────────────────────────────────────
 

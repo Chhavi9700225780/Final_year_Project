@@ -128,7 +128,8 @@ function HangingBulb({ lit, onClick }) {
 // ─── Navbar ───────────────────────────────────────────────────────────
 
 
-export default function Navbar({ activePage, theme, onToggleTheme, onAlertsClick }) {
+export default function Navbar({ activePage, theme, onToggleTheme, onAlertsClick, user,
+  onLogout }) {
   const pageLabel = PAGE_LABELS[activePage] ?? "OVERVIEW"
   const lit = theme === "dark"
 
@@ -196,16 +197,52 @@ export default function Navbar({ activePage, theme, onToggleTheme, onAlertsClick
         <div className="navbar-vdiv" />
 
         {/* User */}
-        <div className="navbar-user">
-          <div className="user-avatar">OP</div>
-          <div className="user-info">
-            <span className="user-role">OPERATOR</span>
-            <span className="user-id">USR-001</span>
-          </div>
-          <span style={{ color: "var(--text-faint)", marginLeft: 4 }}>
-            <ChevronDownIcon />
-          </span>
-        </div>
+        {/* User */}
+<div className="navbar-user">
+  <div className="user-avatar">
+    {user?.name?.charAt(0)?.toUpperCase() || "U"}
+  </div>
+
+  <div className="user-info">
+    <span className="user-role">
+      {user?.role?.toUpperCase() || "USER"}
+    </span>
+
+    <span className="user-id">
+      {user?.name || "USER"}
+    </span>
+  </div>
+
+  <span
+    style={{
+      color: "var(--text-faint)",
+      marginLeft: 4,
+    }}
+  >
+    <ChevronDownIcon />
+  </span>
+</div>
+
+{/* Logout */}
+<button
+  type="button"
+  className="navbar-icon-btn"
+  title="Logout"
+  onClick={onLogout}
+  style={{
+    marginLeft: 8,
+  }}
+>
+  <span
+    style={{
+      fontSize: 15,
+      lineHeight: 1,
+      fontWeight: 600,
+    }}
+  >
+    ↪
+  </span>
+</button>
 
       </div>
 
