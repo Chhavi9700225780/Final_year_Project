@@ -16,6 +16,7 @@ import alertRoutes from "./routes/alertRoutes.js";
 import dashboardAnalyticsRoutes from "./routes/dashboardAnalyticsRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 
+import settingsRoutes from "./routes/settingsRoutes.js";
 
 const app = express();
 
@@ -115,6 +116,7 @@ app.use(
   uploadRoutes
 );
 
+app.use("/api/settings", settingsRoutes);
 
 // ======================================================
 // HEALTH CHECK
