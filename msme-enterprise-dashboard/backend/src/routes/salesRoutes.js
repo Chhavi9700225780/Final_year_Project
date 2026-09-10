@@ -7,7 +7,7 @@ import {
   updateSale,
   deleteSale,
 } from "../controllers/salesController.js";
-
+import { requireModule } from "../middleware/moduleMiddleware.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { authorize } from "../middleware/roleMiddleware.js";
 
@@ -22,6 +22,7 @@ router
   )
   .get(
     protect,
+    requireModule("sales"),
     getSales
   );
 
@@ -29,6 +30,7 @@ router
   .route("/:id")
   .get(
     protect,
+    requireModule("sales"),
     getSale
   )
   .put(

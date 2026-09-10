@@ -355,3 +355,81 @@ export const updateTeamMemberStatus = async (req, res) => {
     });
   }
 };
+
+/*
+|--------------------------------------------------------------------------
+| Update Module Settings
+|--------------------------------------------------------------------------
+*/
+
+export const updateModuleSettings = async (req, res) => {
+  try {
+    const companyId = req.user.companyId;
+
+    if (!companyId) {
+      return res.status(400).json({
+        success: false,
+        message: "User is not associated with a company",
+      });
+    }
+
+    const { modules } = req.body;
+
+    if (!modules || typeof modules !== "object") {
+      return res.status(400).json({
+        success: false,
+        message: "Modules object is required",
+      });
+    }
+
+    const allowedModules = [
+      "dashboard",
+      "production",
+      "inventory",
+      "rawMaterials",
+      "finance",
+      "sales",
+      "reports",
+      "alerts",
+    ];
+
+    const update = {};
+
+    allowedModules.forEach((module) => {
+      if (typeof modules[module] === "boolean") {
+        update[`modules.${module}`] = modules[module];
+      }
+    });
+
+    if (Object.keys(update).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No valid module settings provided",
+      });
+    }
+
+    const settings = await CompanySettings.findOneAndUpdate(
+      { companyId },
+      { $set: update },
+      {
+        new: true,
+        upsert: true,
+        runValidators: true,
+      }
+    ).lean();
+
+    return res.status(200).json({
+      success: true,
+      message: "Module settings updated successfully",
+      data: settings.modules,
+    });
+  } catch (error) {
+    console.error("Update module settings error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update module settings",
+      error: error.message,
+    });
+  }
+};

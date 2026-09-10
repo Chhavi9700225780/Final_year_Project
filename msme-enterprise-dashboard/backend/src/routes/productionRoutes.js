@@ -7,7 +7,7 @@ import {
   updateProduction,
   deleteProduction,
 } from "../controllers/productionController.js";
-
+import { requireModule } from "../middleware/moduleMiddleware.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { authorize } from "../middleware/roleMiddleware.js";
 
@@ -22,6 +22,7 @@ router
   )
   .get(
     protect,
+    requireModule("production"),
     getProductions
   );
 
@@ -29,6 +30,7 @@ router
   .route("/:id")
   .get(
     protect,
+    requireModule("production"),
     getProduction
   )
   .put(

@@ -3,6 +3,7 @@ import express from "express";
 import {
   getSettings,
   updateSettings,
+  updateModuleSettings,
   getTeamMembers,
   updateTeamMemberRole,
   updateTeamMemberStatus,
@@ -72,6 +73,13 @@ router.put(
   "/team/:userId/status",
   protect,
   updateTeamMemberStatus
+);
+
+router.put(
+  "/modules",
+  protect,
+  requireAdmin,
+  updateModuleSettings
 );
 
 export default router;
