@@ -36,8 +36,11 @@ const PAGE_LABELS = {
   Finance: "FINANCE",
   "Raw Materials": "RAW MATERIALS",
   "Data Sources": "DATA SOURCES",
+  Workforce: "WORKFORCE",
   Alerts: "ALERTS",
   Reports: "REPORTS",
+ Settings: "SETTINGS",
+ Profile: "MY PROFILE",
 };
 
 // ─── Hanging bulb — lit (dark) vs unlit (light) ───────────────────────
@@ -129,7 +132,7 @@ function HangingBulb({ lit, onClick }) {
 
 
 export default function Navbar({ activePage, theme, onToggleTheme, onAlertsClick, user,
-  onLogout }) {
+  onLogout ,  onProfileClick,}) {
   const pageLabel = PAGE_LABELS[activePage] ?? "OVERVIEW"
   const lit = theme === "dark"
 
@@ -198,7 +201,20 @@ export default function Navbar({ activePage, theme, onToggleTheme, onAlertsClick
 
         {/* User */}
         {/* User */}
-<div className="navbar-user">
+<button
+  type="button"
+  className="navbar-user"
+  onClick={onProfileClick}
+  title="Open my profile"
+  style={{
+    border: "none",
+    background: "transparent",
+    cursor: "pointer",
+    font: "inherit",
+    color: "inherit",
+    textAlign: "left",
+  }}
+>
   <div className="user-avatar">
     {user?.name?.charAt(0)?.toUpperCase() || "U"}
   </div>
@@ -213,15 +229,10 @@ export default function Navbar({ activePage, theme, onToggleTheme, onAlertsClick
     </span>
   </div>
 
-  <span
-    style={{
-      color: "var(--text-faint)",
-      marginLeft: 4,
-    }}
-  >
+  <span style={{ color: "var(--text-faint)", marginLeft: 4 }}>
     <ChevronDownIcon />
   </span>
-</div>
+</button>
 
 {/* Logout */}
 <button

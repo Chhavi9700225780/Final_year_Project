@@ -184,7 +184,22 @@ function IconWorkforce() {
     </svg>
   )
 }
-
+function IconDataSources() {
+  return (
+    <svg
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M9 12V2" />
+      <path d="M5.5 5.5L9 2l3.5 3.5" />
+      <path d="M2 11v5h14v-5" />
+    </svg>
+  );
+}
 function IconReports() {
   return (
     <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
@@ -213,6 +228,7 @@ const NAV = [
   { id: "sales",      code: "04", label: "SALES",      sub: "Order Pipeline", Icon: IconSales },
   { id: "finance",    code: "05", label: "FINANCE",    sub: "P&L Ledger",     Icon: IconFinance },
   { id: "materials",  code: "06", label: "MATERIALS",  sub: "Raw Supply",     Icon: IconMaterials },
+  { id: "datasources", code: "07", label: "DATA SOURCES", sub: "Upload & Import", Icon: IconDataSources },
   { id: "workforce",  code: "07", label: "WORKFORCE",  sub: "Personnel",      Icon: IconWorkforce },
   { id: "reports",    code: "08", label: "REPORTS",    sub: "Analytics",      Icon: IconReports },
   { id: "settings",   code: "09", label: "SETTINGS",   sub: "Config Panel",   Icon: IconSettings },
@@ -338,14 +354,15 @@ export default function Sidebar({ activePage, setActivePage }) {
   Sales: "sales",
   Finance: "finance",
   "Raw Materials": "materials",
-  "Data Sources": "workforce",
-  Alerts: "alerts",
+  "Data Sources": "datasources",
+  Workforce: "workforce",
   Reports: "reports",
   Settings: "settings",
 };
 
-const active =
-  activePageMap[activePage] || "overview";
+const active = activePageMap[activePage] || "overview";
+
+
   
   const [now, setNow] = useState(new Date())
 
@@ -405,17 +422,19 @@ const active =
               key={id}
               className={`forge-nav-item${isActive ? " active" : ""}`}
               onClick={() => {
-  const pageMap = {
+   const pageMap = {
     overview: "Dashboard",
     production: "Production",
     inventory: "Inventory",
     sales: "Sales",
     finance: "Finance",
     materials: "Raw Materials",
-    workforce: "Data Sources",
+    datasources: "Data Sources",
+    workforce: "Workforce",
     reports: "Reports",
     settings: "Settings",
   };
+
 
   setActivePage(pageMap[id]);
 }}

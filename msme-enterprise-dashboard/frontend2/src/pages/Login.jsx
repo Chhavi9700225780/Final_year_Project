@@ -6,6 +6,7 @@ const Login = ({
   theme,
   onToggleTheme,
   onRegisterClick,
+  onForgotPasswordClick,
 })  => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -171,7 +172,14 @@ const Login = ({
             />
 
           </div>
-
+          <div className="login-forgot-password">
+  <button
+    type="button"
+    onClick={onForgotPasswordClick}
+  >
+    FORGOT PASSWORD?
+  </button>
+</div>
 
           {/* SUBMIT */}
 

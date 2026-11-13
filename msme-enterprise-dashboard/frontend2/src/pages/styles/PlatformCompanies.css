@@ -1,0 +1,242 @@
+
+.platform-companies {
+  margin-top: 30px;
+  padding: 24px;
+  min-width: 0;
+  background: var(--forge-panel);
+  border: 1px solid var(--border-steel);
+  border-radius: 4px;
+}
+
+.platform-companies-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.platform-companies-header h3 {
+  margin: 9px 0;
+  color: var(--text-bright);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.platform-companies-header p {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.platform-company-count {
+  color: var(--amber);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.platform-company-search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.platform-company-search input {
+  flex: 1;
+  min-width: 0;
+  height: 42px;
+  padding: 0 14px;
+  color: var(--text-bright);
+  background: var(--forge-dark);
+  border: 1px solid var(--border-steel);
+  border-radius: 4px;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.platform-company-search input:focus {
+  border-color: var(--amber);
+}
+
+.platform-company-search input::placeholder {
+  color: var(--text-faint);
+}
+
+.platform-company-search button,
+.platform-company-pagination button,
+.platform-company-error button {
+  min-height: 40px;
+  padding: 0 16px;
+  color: var(--forge-dark);
+  background: var(--amber);
+  border: 1px solid var(--amber);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.platform-company-search button.platform-clear-search {
+  color: var(--text-bright);
+  background: transparent;
+  border-color: var(--border-steel);
+}
+
+.platform-company-search button:disabled,
+.platform-company-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.platform-company-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.platform-company-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.platform-company-table th {
+  padding: 15px 13px;
+  color: var(--text-faint);
+  background: var(--forge-dark);
+  border-bottom: 1px solid var(--border-steel);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+.platform-company-table td {
+  padding: 17px 13px;
+  color: var(--text-faint);
+  border-bottom: 1px solid var(--border-steel);
+  font-size: 10px;
+}
+
+.platform-company-table tbody tr:hover {
+  background: var(--forge-dark);
+}
+
+.platform-company-table td.platform-company-name {
+  color: var(--text-bright);
+  font-weight: 600;
+}
+
+.platform-company-status {
+  display: inline-block;
+  padding: 6px 9px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.platform-company-status.active {
+  color: var(--green-op);
+}
+
+.platform-company-status.inactive {
+  color: var(--red-alert);
+}
+
+.platform-company-message {
+  height: 110px;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.platform-company-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+  color: var(--text-faint);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.platform-company-pagination > div {
+  display: flex;
+  gap: 8px;
+}
+
+.platform-company-error {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 14px;
+  color: var(--red-alert);
+  border: 1px solid var(--red-alert);
+  font-size: 11px;
+}
+
+@media (max-width: 650px) {
+  .platform-companies {
+    padding: 16px;
+  }
+
+  .platform-company-search {
+    flex-wrap: wrap;
+  }
+
+  .platform-company-search input {
+    flex-basis: 100%;
+  }
+
+  .platform-company-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.platform-company-action {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid;
+  border-radius: 3px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.platform-company-action.deactivate {
+  color: var(--red-alert);
+  border-color: var(--red-alert);
+}
+
+.platform-company-action.activate {
+  color: var(--green-op);
+  border-color: var(--green-op);
+}
+
+.platform-company-action:hover:not(:disabled) {
+  background: var(--forge-dark);
+}
+
+.platform-company-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.platform-company-success {
+  margin-bottom: 16px;
+  padding: 13px 16px;
+  border: 1px solid var(--green-op);
+  color: var(--green-op);
+  font-size: 11px;
+}

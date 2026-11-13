@@ -31,10 +31,16 @@ const userSchema = new mongoose.Schema(
     },
 
     role: {
-      type: String,
-      enum: ["admin", "manager", "operator", "viewer"],
-      default: "viewer",
-    },
+  type: String,
+  enum: [
+    "super_admin",
+    "admin",
+    "manager",
+    "operator",
+    "viewer",
+  ],
+  default: "viewer",
+},
 
     isActive: {
       type: Boolean,

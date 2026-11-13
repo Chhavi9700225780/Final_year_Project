@@ -1,0 +1,418 @@
+
+.workforce-page {
+  color: var(--text-bright);
+  font-family: var(--font-mono);
+  padding: 4px 0 28px;
+}
+
+.workforce-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  border-left: 4px solid var(--amber);
+  padding: 8px 0 8px 18px;
+}
+
+.workforce-eyebrow,
+.workforce-panel-header span,
+.workforce-stat > span {
+  color: var(--text-faint);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+
+.workforce-heading h1 {
+  margin: 7px 0;
+  font-family: var(--font-brand);
+  font-size: 25px;
+  letter-spacing: 0.04em;
+}
+
+.workforce-heading p {
+  margin: 0;
+  color: var(--text-mid);
+  font-size: 12px;
+}
+
+.workforce-refresh {
+  background: var(--forge-plate);
+  color: var(--text-bright);
+  border: 1px solid var(--border-amber);
+  padding: 11px 16px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
+.workforce-refresh:disabled,
+.wf-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.workforce-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.workforce-stat {
+  min-height: 100px;
+  padding: 18px;
+  background: var(--forge-panel);
+  border: 1px solid var(--border-steel);
+  border-top: 3px solid var(--amber);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.workforce-stat strong {
+  font-family: var(--font-brand);
+  color: var(--amber);
+  font-size: 29px;
+}
+
+.workforce-stat .wf-green { color: var(--green-op); }
+.workforce-stat .wf-red { color: #f87171; }
+.workforce-stat .wf-amber { color: var(--amber-bright); }
+
+.workforce-panel {
+  background: var(--forge-panel);
+  border: 1px solid var(--border-steel);
+}
+
+.workforce-panel-header {
+  min-height: 68px;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-steel);
+  border-left: 4px solid var(--green-op);
+}
+
+.workforce-panel-header h2 {
+  margin: 0 0 7px;
+  font-family: var(--font-brand);
+  font-size: 16px;
+}
+
+.workforce-live {
+  color: var(--green-op) !important;
+}
+
+.workforce-live i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--green-op);
+  box-shadow: 0 0 7px var(--green-op);
+}
+
+.workforce-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-steel);
+}
+
+.workforce-toolbar input {
+  width: min(420px, 100%);
+  padding: 11px 13px;
+  background: var(--forge-dark);
+  border: 1px solid var(--border-steel);
+  color: var(--text-bright);
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.workforce-toolbar input:focus {
+  border-color: var(--amber);
+}
+
+.workforce-toolbar span {
+  color: var(--amber);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.workforce-message {
+  margin: 14px 18px 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  border: 1px solid var(--border-steel);
+}
+
+.workforce-message.success { color: var(--green-op); }
+.workforce-message.error { color: #f87171; }
+
+.workforce-empty {
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--text-faint);
+  letter-spacing: 0.16em;
+  font-size: 11px;
+}
+
+.workforce-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.workforce-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+  font-size: 11px;
+}
+
+.workforce-table th {
+  padding: 14px 16px;
+  color: var(--text-faint);
+  background: var(--forge-plate);
+  text-align: left;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.workforce-table td {
+  padding: 15px 16px;
+  color: var(--text-mid);
+  border-top: 1px solid var(--border-steel);
+  white-space: nowrap;
+}
+
+.workforce-table tbody tr:hover {
+  background: var(--forge-plate);
+}
+
+.wf-member {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-bright);
+}
+
+.wf-avatar {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  color: var(--amber);
+  background: var(--amber-glow);
+  border: 1px solid var(--border-amber);
+  font-weight: bold;
+}
+
+.wf-member small {
+  color: var(--green-op);
+  font-size: 8px;
+}
+
+.workforce-table select {
+  padding: 7px 9px;
+  color: var(--text-bright);
+  background: var(--forge-dark);
+  border: 1px solid var(--border-steel);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.wf-role,
+.wf-status {
+  display: inline-block;
+  padding: 5px 8px;
+  border: 1px solid var(--border-steel);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.role-admin { color: var(--amber); }
+.role-manager { color: #60a5fa; }
+.role-operator { color: var(--green-op); }
+.role-viewer { color: var(--text-mid); }
+
+.wf-status.active {
+  color: var(--green-op);
+  border-color: var(--green-op);
+}
+
+.wf-status.inactive {
+  color: #f87171;
+  border-color: #f87171;
+}
+
+.wf-action {
+  padding: 7px 9px;
+  border: 1px solid var(--border-steel);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.wf-action.deactivate {
+  color: #f87171;
+  border-color: #f87171;
+}
+
+.wf-action.activate {
+  color: var(--green-op);
+  border-color: var(--green-op);
+}
+
+.workforce-note {
+  color: var(--text-faint);
+  font-size: 11px;
+  margin-top: 14px;
+}
+
+@media (max-width: 900px) {
+  .workforce-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .workforce-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .workforce-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .workforce-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+
+/* ======================================================
+   TEAM INVITATIONS
+====================================================== */
+
+.wf-invite-panel {
+  margin-bottom: 24px;
+}
+
+.wf-invite-form {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 1fr auto;
+  align-items: end;
+  gap: 16px;
+  padding: 22px;
+}
+
+.wf-invite-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+.wf-invite-field label {
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.wf-invite-field input,
+.wf-invite-field select {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  color: var(--text-bright);
+  background: var(--forge-dark);
+  border: 1px solid var(--border-steel);
+  border-radius: 4px;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.wf-invite-field input:focus,
+.wf-invite-field select:focus {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 2px var(--amber-glow);
+}
+
+.wf-invite-field input::placeholder {
+  color: var(--text-faint);
+  opacity: 0.7;
+}
+
+.wf-send-invite {
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--amber);
+  border-radius: 4px;
+  background: var(--amber);
+  color: var(--forge-dark);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.wf-send-invite:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.wf-send-invite:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.wf-invite-status.accepted {
+  color: var(--green-op);
+}
+
+.wf-invite-status.cancelled,
+.wf-invite-status.expired {
+  color: var(--red-alert);
+}
+
+.wf-invite-status.pending {
+  color: var(--amber);
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 1100px) {
+  .wf-invite-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wf-send-invite {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .wf-invite-form {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+}

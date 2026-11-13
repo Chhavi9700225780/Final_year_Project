@@ -1,0 +1,224 @@
+
+.forge-profile {
+  color: var(--text-bright);
+  font-family: var(--font-mono);
+  padding-bottom: 28px;
+}
+
+.profile-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0 8px 18px;
+  margin-bottom: 22px;
+  border-left: 4px solid var(--amber);
+}
+
+.profile-eyebrow {
+  color: var(--text-faint);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+
+.profile-heading h1 {
+  font-family: var(--font-brand);
+  font-size: 25px;
+  margin: 7px 0;
+}
+
+.profile-heading p {
+  color: var(--text-mid);
+  font-size: 12px;
+  margin: 0;
+}
+
+.profile-account-status {
+  color: var(--green-op);
+  border: 1px solid var(--green-op);
+  padding: 9px 12px;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.profile-account-status i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: var(--green-op);
+  box-shadow: 0 0 6px var(--green-op);
+}
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: var(--forge-panel);
+  border: 1px solid var(--border-steel);
+  border-left: 4px solid var(--amber);
+}
+
+.profile-large-avatar {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--amber);
+  background: var(--amber-glow);
+  border: 1px solid var(--border-amber);
+  font-family: var(--font-brand);
+  font-size: 27px;
+}
+
+.profile-identity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.profile-identity-info h2 {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: 19px;
+}
+
+.profile-identity-info > span {
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+.profile-role {
+  color: var(--amber) !important;
+  font-size: 9px !important;
+  letter-spacing: 0.15em;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.profile-panel {
+  min-width: 0;
+  background: var(--forge-panel);
+  border: 1px solid var(--border-steel);
+}
+
+.profile-panel-heading {
+  padding: 17px 19px;
+  border-bottom: 1px solid var(--border-steel);
+  border-left: 4px solid var(--amber);
+}
+
+.profile-panel-heading h2 {
+  margin: 0 0 7px;
+  font-family: var(--font-brand);
+  font-size: 15px;
+}
+
+.profile-panel-heading span {
+  color: var(--text-faint);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+}
+
+.profile-panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  padding: 20px;
+}
+
+.profile-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-faint);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+}
+
+.profile-panel input {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  background: var(--forge-dark);
+  border: 1px solid var(--border-steel);
+  color: var(--text-bright);
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.profile-panel input:focus {
+  border-color: var(--amber);
+}
+
+.profile-panel input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.profile-panel label small {
+  color: var(--text-faint);
+  font-size: 9px;
+  letter-spacing: normal;
+}
+
+.profile-submit {
+  min-height: 42px;
+  padding: 11px 15px;
+  background: var(--amber);
+  border: 1px solid var(--amber);
+  color: #171109;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.profile-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.profile-feedback {
+  padding: 10px 12px;
+  border: 1px solid var(--border-steel);
+  font-size: 10px;
+}
+
+.profile-feedback.success {
+  color: var(--green-op);
+  border-color: var(--green-op);
+}
+
+.profile-feedback.error {
+  color: #f87171;
+  border-color: #f87171;
+}
+
+@media (max-width: 950px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .profile-identity {
+    padding: 14px;
+  }
+}

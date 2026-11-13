@@ -2,9 +2,11 @@ import bcrypt from "bcryptjs";
 
 import User from "../models/User.js";
 import Company from "../models/Company.js";
-import generateToken from "../utils/generateToken.js";
+import generateToken  from "../utils/generateToken.js";
 
-
+import crypto from "crypto";
+import PasswordResetToken from "../models/PasswordResetToken.js";
+import { sendEmail } from "../utils/emailService.js";
 // ======================================================
 // COOKIE OPTIONS
 // ======================================================
@@ -293,6 +295,7 @@ export const login = async (req, res) => {
     }
 
 
+
     // ==================================================
     // CHECK ACTIVE STATUS
     // ==================================================
@@ -322,7 +325,24 @@ export const login = async (req, res) => {
           "Invalid email or password",
       });
     }
+    // Reject users belonging to suspended or unavailable companies.
+if (user.role !== "super_admin") {
+  if (!user.companyId) {
+    return res.status(403).json({
+      message: "Your account is not associated with a company.",
+    });
+  }
 
+  const company = await Company.findById(user.companyId)
+    .select("_id isActive")
+    .lean();
+
+  if (!company || !company.isActive) {
+    return res.status(403).json({
+      message: "Your company's platform access has been suspended.",
+    });
+  }
+}
 
     // ==================================================
     // GENERATE JWT
@@ -374,6 +394,176 @@ export const login = async (req, res) => {
         "Server error during login",
 
       error: error.message,
+    });
+  }
+};
+
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const email = req.body.email?.toLowerCase().trim();
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Email address is required.",
+      });
+    }
+
+    const genericMessage =
+      "If an account exists with this email, a password reset link has been sent.";
+
+    const user = await User.findOne({ email });
+
+    // Do not reveal whether an account exists.
+    if (!user || !user.isActive) {
+      return res.status(200).json({
+        message: genericMessage,
+      });
+    }
+
+    // Invalidate previous reset links.
+    await PasswordResetToken.deleteMany({
+      userId: user._id,
+    });
+
+    // Generate a cryptographically secure random token.
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    // Store only its SHA-256 hash.
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    await PasswordResetToken.create({
+      userId: user._id,
+      tokenHash,
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+    });
+
+    const frontendUrl = process.env.FRONTEND_URL?.replace(/\/$/, "");
+
+    if (!frontendUrl) {
+      throw new Error("FRONTEND_URL is not configured.");
+    }
+
+    const resetLink =
+      `${frontendUrl}/reset-password?token=${resetToken}`;
+
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: "Reset Your FORGE Account Password",
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:24px;">
+            <h2>FORGE Password Reset</h2>
+            <p>Hello ${user.name},</p>
+            <p>We received a request to reset your password.</p>
+            <p>
+              <a href="${resetLink}"
+                 style="display:inline-block;padding:12px 20px;background:#B08D57;color:#111;text-decoration:none;">
+                Reset Password
+              </a>
+            </p>
+            <p>This link expires in 15 minutes.</p>
+            <p>If you did not request this, please ignore this email.</p>
+          </div>
+        `,
+      });
+    } catch (emailError) {
+      await PasswordResetToken.deleteMany({
+        userId: user._id,
+      });
+
+      console.error("Password reset email error:", emailError);
+    }
+
+    return res.status(200).json({
+      message: genericMessage,
+    });
+  } catch (error) {
+    console.error("Forgot Password Error:", error);
+
+    return res.status(500).json({
+      message: "Unable to process your request right now.",
+    });
+  }
+};
+
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword, confirmPassword } = req.body;
+
+    if (!token || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        message: "All fields are required.",
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        message: "Password must be at least 8 characters.",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        message: "Passwords do not match.",
+      });
+    }
+
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    // Atomically claim the token so it cannot be reused.
+    const resetRecord = await PasswordResetToken.findOneAndUpdate(
+      {
+        tokenHash,
+        expiresAt: { $gt: new Date() },
+        usedAt: null,
+      },
+      {
+        $set: { usedAt: new Date() },
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!resetRecord) {
+      return res.status(400).json({
+        message: "Invalid or expired password reset link.",
+      });
+    }
+
+    const user = await User.findById(resetRecord.userId);
+
+    if (!user || !user.isActive) {
+      return res.status(400).json({
+        message: "Unable to reset password for this account.",
+      });
+    }
+
+    // bcrypt automatically generates and stores a unique salt.
+    user.password = await bcrypt.hash(newPassword, 12);
+    await user.save();
+
+    // Invalidate all remaining reset links for this user.
+    await PasswordResetToken.deleteMany({
+      userId: user._id,
+    });
+
+    return res.status(200).json({
+      message: "Password reset successfully. Please sign in.",
+    });
+  } catch (error) {
+    console.error("Reset Password Error:", error);
+
+    return res.status(500).json({
+      message: "Unable to reset your password.",
     });
   }
 };
@@ -459,6 +649,130 @@ export const getCurrentUser = async (
     return res.status(500).json({
       message:
         "Server error",
+    });
+  }
+};
+
+
+/* ==========================================
+   UPDATE PERSONAL PROFILE
+========================================== */
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        message: "Name is required",
+      });
+    }
+
+    if (name.trim().length > 100) {
+      return res.status(400).json({
+        message: "Name cannot exceed 100 characters",
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    user.name = name.trim();
+    await user.save();
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        companyId: user.companyId,
+      },
+    });
+  } catch (error) {
+    console.error("Update Profile Error:", error);
+
+    return res.status(500).json({
+      message: "Unable to update profile",
+    });
+  }
+};
+
+
+/* ==========================================
+   CHANGE PASSWORD
+========================================== */
+
+export const changePassword = async (req, res) => {
+  try {
+    const {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        message: "All password fields are required",
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        message: "New password must be at least 8 characters",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        message: "New passwords do not match",
+      });
+    }
+
+    if (currentPassword === newPassword) {
+      return res.status(400).json({
+        message: "New password must be different",
+      });
+    }
+
+    const user = await User.findById(req.user._id)
+      .select("+password");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        message: "Current password is incorrect",
+      });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 12);
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    console.error("Change Password Error:", error);
+
+    return res.status(500).json({
+      message: "Unable to change password",
     });
   }
 };

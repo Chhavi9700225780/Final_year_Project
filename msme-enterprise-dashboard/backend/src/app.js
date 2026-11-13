@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/authRoutes.js";
 import companyRoutes from "./routes/companyRoutes.js";
-
+import platformRoutes from "./routes/platformRoutes.js";
 import productionRoutes from "./routes/productionRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 import rawMaterialRoutes from "./routes/rawMaterialRoutes.js";
@@ -15,9 +15,8 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 import alertRoutes from "./routes/alertRoutes.js";
 import dashboardAnalyticsRoutes from "./routes/dashboardAnalyticsRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
-
 import settingsRoutes from "./routes/settingsRoutes.js";
-
+import invitationRoutes from "./routes/invitationRoutes.js";
 const app = express();
 
 
@@ -150,6 +149,6 @@ app.use(
     });
   }
 );
-
-
+app.use("/api/invitations", invitationRoutes);
+app.use("/api/platform", platformRoutes);
 export default app;

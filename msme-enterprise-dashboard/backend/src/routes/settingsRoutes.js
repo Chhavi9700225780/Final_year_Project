@@ -1,3 +1,4 @@
+
 import express from "express";
 
 import {
@@ -16,65 +17,28 @@ import {
 
 const router = express.Router();
 
-/*
-|--------------------------------------------------------------------------
-| Company Settings
-|--------------------------------------------------------------------------
-*/
-
+// Company configuration
 router.get("/", protect, getSettings);
+router.put("/", protect, requireAdmin, updateSettings);
 
-
-router.put(
-  "/",
-  protect,
-  requireAdmin,
-  updateSettings
-);
-
-router.get(
-  "/team",
-  protect,
-  getTeamMembers
-);
-
-router.put(
-  "/team/:userId/role",
-  protect,
-  requireAdmin,
-  updateTeamMemberRole
-);
-
-router.put(
-  "/team/:userId/status",
-  protect,
-  requireAdmin,
-  updateTeamMemberStatus
-);
-
-router.put("/", protect, updateSettings);
-
-
-/*
-|--------------------------------------------------------------------------
-| Team Management
-|--------------------------------------------------------------------------
-*/
-
+// Workforce management
 router.get("/team", protect, getTeamMembers);
 
 router.put(
   "/team/:userId/role",
   protect,
+  requireAdmin,
   updateTeamMemberRole
 );
 
 router.put(
   "/team/:userId/status",
   protect,
+  requireAdmin,
   updateTeamMemberStatus
 );
 
+// Module configuration
 router.put(
   "/modules",
   protect,

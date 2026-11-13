@@ -1,0 +1,11 @@
+company_id,product_id,product_name,quantity,revenue,customer_region,sale_date
+68a123456789abcdef123456,P001,Automotive Bolt,700,126000,North India,2026-08-01
+68a123456789abcdef123456,P002,Automotive Nut,1100,165000,West India,2026-08-02
+68a123456789abcdef123456,P003,Brake Pin,650,143000,North India,2026-08-03
+68a123456789abcdef123456,P004,Steel Washer,1450,203000,South India,2026-08-04
+68a123456789abcdef123456,P005,Engine Mount,500,275000,West India,2026-08-05
+68a123456789abcdef123456,P001,Automotive Bolt,980,176400,East India,2026-08-06
+68a123456789abcdef123456,P002,Automotive Nut,1450,217500,North India,2026-08-07
+68a123456789abcdef123456,P003,Brake Pin,760,167200,South India,2026-08-08
+68a123456789abcdef123456,P004,Steel Washer,1800,252000,West India,2026-08-09
+68a123456789abcdef123456,P005,Engine Mount,600,330000,North India,2026-08-10

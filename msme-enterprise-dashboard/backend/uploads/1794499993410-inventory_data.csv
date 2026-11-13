@@ -1,0 +1,11 @@
+company_id,product_id,product_name,opening_stock,produced_quantity,sold_quantity,closing_stock,warehouse,record_date
+68a123456789abcdef123456,P001,Automotive Bolt,500,950,700,750,Main Warehouse,2026-08-01
+68a123456789abcdef123456,P002,Automotive Nut,650,1430,1100,980,Main Warehouse,2026-08-02
+68a123456789abcdef123456,P003,Brake Pin,300,780,650,430,Warehouse A,2026-08-03
+68a123456789abcdef123456,P004,Steel Washer,900,1920,1450,1370,Main Warehouse,2026-08-04
+68a123456789abcdef123456,P005,Engine Mount,250,570,500,320,Warehouse B,2026-08-05
+68a123456789abcdef123456,P001,Automotive Bolt,750,1160,980,930,Main Warehouse,2026-08-06
+68a123456789abcdef123456,P002,Automotive Nut,980,1600,1450,1130,Main Warehouse,2026-08-07
+68a123456789abcdef123456,P003,Brake Pin,430,810,760,480,Warehouse A,2026-08-08
+68a123456789abcdef123456,P004,Steel Washer,1370,2140,1800,1710,Main Warehouse,2026-08-09
+68a123456789abcdef123456,P005,Engine Mount,320,665,600,385,Warehouse B,2026-08-10
