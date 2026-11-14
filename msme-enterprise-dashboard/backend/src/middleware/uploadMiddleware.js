@@ -1,4 +1,4 @@
-import multer from "multer";
+/*import multer from "multer";
 import path from "path";
 import fs from "fs";
 
@@ -73,6 +73,33 @@ const upload = multer({
   limits: {
     fileSize: 20 * 1024 * 1024, // 20 MB
   },
+});
+
+export default upload;*/
+
+import multer from "multer";
+import path from "path";
+
+// Vercel Functions currently cap request bodies at 4.5 MB; leave multipart headroom.
+const MAX_FILE_SIZE = 4 * 1024 * 1024;
+const allowedExtensions = new Set([".csv", ".xlsx"]);
+const allowedMimeTypes = new Set([
+  "text/csv",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/octet-stream",
+  "application/vnd.ms-excel",
+]);
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: (req, file, callback) => {
+    const extension = path.extname(file.originalname || "").toLowerCase();
+    if (!allowedExtensions.has(extension) || !allowedMimeTypes.has(file.mimetype)) {
+      return callback(new Error("Only valid CSV and XLSX files are allowed."));
+    }
+    callback(null, true);
+  },
+  limits: { fileSize: MAX_FILE_SIZE, files: 1, fields: 5, parts: 6 },
 });
 
 export default upload;

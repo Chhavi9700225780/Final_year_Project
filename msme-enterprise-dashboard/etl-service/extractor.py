@@ -1,3 +1,14 @@
+from utils import read_dataset, standardize_column_names, dataframe_summary
+
+
+def extract_data(file_path):
+    dataframe = read_dataset(file_path)
+    dataframe = standardize_column_names(dataframe)
+    print("Dataset loaded:", dataframe_summary(dataframe))
+    return dataframe
+
+
+"""
 import os
 import pandas as pd
 
@@ -28,3 +39,5 @@ def extract_data(file_path):
     print(dataframe_summary(dataframe))
 
     return dataframe
+
+"""

@@ -4,3 +4,10 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Ignore Python virtual environments anywhere
+.venv/
+venv/
+
+# Ignore compiled Python files anywhere
+*.pyc

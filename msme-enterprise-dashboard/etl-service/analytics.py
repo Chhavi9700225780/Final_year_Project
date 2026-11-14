@@ -1,3 +1,43 @@
+from db import get_db
+from bson import ObjectId
+from loader import COLLECTIONS
+
+
+def generate_kpis(department, company_id):
+    if department not in COLLECTIONS or not ObjectId.is_valid(str(company_id)):
+        raise ValueError("Invalid department or company_id")
+    db = get_db()
+    collection = db[COLLECTIONS[department]]
+    match = {"companyId": ObjectId(str(company_id))}
+    fields = {
+        "production": {"planned": "$plannedQuantity", "actual": "$actualQuantity", "defective": "$defectiveQuantity"},
+        "inventory": {"stock": "$closingStock"},
+        "raw-materials": {"stock": "$currentStock"},
+        "sales": {"revenue": "$revenue", "quantity": "$quantity"},
+        "finance": {"amount": "$amount", "transactionType": "$transactionType"},
+    }[department]
+    group = {"_id": None}
+    for name, expression in fields.items():
+        if name == "revenue" and department == "finance":
+            group[name] = {"$sum": {"$cond": [{"$eq": [{"$toLower": {"$ifNull": [expression, ""]}}, "revenue"]}, 0, 0]}}
+        elif name == "transactionType":
+            continue
+        else:
+            group[name] = {"$sum": {"$ifNull": [expression, 0]}}
+    if department == "finance":
+        pipeline = [{"$match": match}, {"$group": {"_id": None, "revenue": {"$sum": {"$cond": [{"$eq": [{"$toLower": {"$ifNull": ["$transactionType", ""]}}, "revenue"]}, {"$ifNull": ["$amount", 0]}, 0]}}, "expense": {"$sum": {"$cond": [{"$eq": [{"$toLower": {"$ifNull": ["$transactionType", ""]}}, "expense"]}, {"$ifNull": ["$amount", 0]}, 0]}}}}]
+    else:
+        pipeline = [{"$match": match}, {"$group": group}]
+    result = next(collection.aggregate(pipeline, allowDiskUse=True), {})
+    result.pop("_id", None)
+    if department == "production":
+        result["efficiencyPct"] = (result.get("actual", 0) / result.get("planned", 0) * 100) if result.get("planned") else 0
+        result["defectRatePct"] = (result.get("defective", 0) / result.get("actual", 0) * 100) if result.get("actual") else 0
+    if department == "finance":
+        result["profit"] = result.get("revenue", 0) - result.get("expense", 0)
+    return result
+
+"""
 import sys
 
 try:
@@ -247,3 +287,5 @@ def generate_kpis(department, company_id):
     else:
 
         print("Invalid Department")
+
+"""

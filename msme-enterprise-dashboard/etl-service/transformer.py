@@ -1,5 +1,28 @@
 import pandas as pd
 
+DATE_COLUMNS = ["productionDate", "recordDate", "lastUpdated", "transactionDate", "saleDate"]
+NUMERIC_COLUMNS = ["plannedQuantity", "actualQuantity", "defectiveQuantity", "productionCost", "efficiencyPct", "openingStock", "producedQuantity", "soldQuantity", "closingStock", "minimumStock", "currentStock", "unitCost", "amount", "quantity", "revenue"]
+
+
+def transform_data(df, department):
+    result = df.copy()
+    for column in DATE_COLUMNS:
+        if column in result.columns:
+            result[column] = pd.to_datetime(result[column], errors="coerce", dayfirst=True)
+    for column in NUMERIC_COLUMNS:
+        if column in result.columns:
+            result[column] = pd.to_numeric(result[column], errors="coerce")
+    for column in result.select_dtypes(include=["object"]).columns:
+        result[column] = result[column].map(lambda value: value.strip() if isinstance(value, str) else value)
+    if "transactionType" in result.columns:
+        result["transactionType"] = result["transactionType"].astype(str).str.strip().str.lower()
+    if "status" in result.columns:
+        result["status"] = result["status"].astype(str).str.strip()
+    return result.drop_duplicates().reset_index(drop=True)
+
+"""
+import pandas as pd
+
 
 # ============================================================
 # TRANSFORM DATA
@@ -190,3 +213,4 @@ def transform_data(
 
 
     return df
+"""
