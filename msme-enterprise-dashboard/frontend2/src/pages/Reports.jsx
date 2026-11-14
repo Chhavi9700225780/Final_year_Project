@@ -753,20 +753,29 @@ export default function Reports() {
   const [error, setError] = useState("")
 
   // ── Fetch summary (original logic) ──
-  const fetchSummary = async () => {
-    try {
-      setLoading(true)
-      setError("")
-      const response = await getDashboardSummary(COMPANY_ID)
-      console.log("Reports Summary:", response.data)
-      setSummary(response.data?.data)
-    } catch (err) {
-      console.error("Reports error:", err)
-      setError(err.response?.data?.message || "Unable to generate report.")
-    } finally {
-      setLoading(false)
-    }
+  
+const fetchSummary = async () => {
+  try {
+    setLoading(true);
+    setError("");
+
+    const response = await getDashboardSummary();
+
+    console.log("Reports Summary:", response.data);
+
+    setSummary(response.data?.data ?? null);
+  } catch (err) {
+    console.error("Reports error:", err);
+
+    setError(
+      err.response?.data?.message ||
+      "Unable to generate report."
+    );
+  } finally {
+    setLoading(false);
   }
+};
+
 
   useEffect(() => { fetchSummary() }, [])
 
