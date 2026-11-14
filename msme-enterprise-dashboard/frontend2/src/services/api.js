@@ -5,14 +5,25 @@ import axios from "axios";
 // AXIOS INSTANCE
 // ======================================================
 
-const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+// ======================================================
+// ENVIRONMENT CONFIGURATION
+// ======================================================
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!API_BASE_URL) {
+  throw new Error("VITE_API_BASE_URL is not configured.");
+}
+
+// ======================================================
+// AXIOS INSTANCE
+// ======================================================
+
+const API = axios.create({
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-
-  // Required for HttpOnly authentication cookie
   withCredentials: true,
 });
 
