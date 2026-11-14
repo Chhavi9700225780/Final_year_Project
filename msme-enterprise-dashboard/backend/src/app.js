@@ -17,7 +17,7 @@ import dashboardAnalyticsRoutes from "./routes/dashboardAnalyticsRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import invitationRoutes from "./routes/invitationRoutes.js";
-
+import connectDB from "./config/db.js";
 const app = express();
 
 // ======================================================
@@ -59,7 +59,19 @@ app.use(express.urlencoded({ extended: true }));
 // ======================================================
 
 app.use(cookieParser());
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("Database connection failed:", error);
 
+    res.status(503).json({
+      success: false,
+      message: "Database temporarily unavailable",
+    });
+  }
+});
 // ======================================================
 // API ROUTES
 // ======================================================
